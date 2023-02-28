@@ -1,15 +1,15 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import styles from './app.module.scss';
-
-import NxWelcome from './nx-welcome';
+import { SignIn, SignUp } from '@generator/shared/ui';
+import {Route,Routes} from 'react-router-dom';
+import Landing from './landing/landing';
 
 export function App() {
   return (
-    <>
-      <NxWelcome title="generator" />
-
-      <div />
-    </>
+      <Routes>
+        <Route path='/' element={<Landing/>}/>
+        <Route path='/signup' element={<SignUp/>}/>
+        <Route path='/signin' element={<SignIn/>}/>
+      </Routes>
   );
 }
 

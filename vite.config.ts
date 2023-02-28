@@ -5,7 +5,9 @@ import viteTsConfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
   cacheDir: './node_modules/.vite/generator',
-
+  define:{
+    'process.env':{}
+  },
   server: {
     port: 4200,
     host: 'localhost',
