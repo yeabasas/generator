@@ -1,15 +1,15 @@
 import styled from '@emotion/styled';
 import ErrorText from '../ErrorText';
 const InputField = styled.input({
-  padding: '10px 15px',
-  margin: '8px 0',
-  background: 'transparent',
-  outline: 'none',
-  border: '1px solid #8c8c8f',
-  width: '100%',
-  borderRadius: '6px',
-  color: '#8c8c8f',
-  fontWeight: 800,
+  // padding: '10px 15px',
+  // margin: '8px 0',
+  // background: 'transparent',
+  // outline: 'none',
+  // border: '1px solid #8c8c8f',
+  // width: '100%',
+  // borderRadius: '6px',
+  // color: '#8c8c8f',
+  // fontWeight: 800,
 });
 
 type IInputField = {
@@ -33,6 +33,7 @@ const InputComponent = ({
 }: IInputField) => (
   <>
     <InputField
+    className='pl-2 h-9 text-white bg-blue-600 rounded'
       type={type}
       placeholder={placeholder}
       {...register(name, {

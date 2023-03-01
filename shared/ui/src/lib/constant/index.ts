@@ -1,6 +1,9 @@
 export const routeName = {
   LOGIN: '/',
   REGISTRATION: '/registration',
+  LANDING:'/landing',
+  DND:'/dnd',
+  APPLICATION:'/application'
 }
 
 export const REGEX = {

@@ -2,64 +2,21 @@ import { useState } from 'react';
 import InputField from '../component/inputField';
 import Button from '../component/button';
 import styled from '@emotion/styled';
-import { FaGooglePlusG, FaFacebookF } from 'react-icons/fa';
-import ButtonDesign from '../component/buttonSecondary';
 import { routeName, REGEX, ENABLE_FIREBASE } from '../constant';
 import { useNavigate } from 'react-router-dom';
 import {signInWithEmailAndPassword} from 'firebase/auth';
 import { app } from '../config/firebase';
 import { useForm } from 'react-hook-form';
+import console from 'console';
+const Container = styled.div({})
 
-const Container = styled.div({
-  height: '100%',
-  width: '100%',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  backgroundColor: '#1c1c24',
-  flexDirection: 'column',
-  padding: '20px'
-})
-
-const FormContainer = styled.div({
-  height: '100%',
-  width: '100%',
-  maxWidth: '400px',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  backgroundColor: '#1c1c24',
-  flexDirection:'column'
-})
-
-const Text = styled.p({
-  color: '#8c8c8f',
-  fontWeight: 800
-})
-
-
-const TextIcon = styled.p({
-  color: '#8c8c8f',
-  fontWeight: 800,
-  paddingLeft: '10px'
-})
-
+const FormContainer = styled.div({})
 
 const Title = styled.p({
   color: '#ffffff',
   fontWeight: 800,
   paddingBottom: '50px',
   fontSize: '44px'
-})
-
-const FacebookIcon = styled(FaFacebookF)({
-  color: '#ffffff',
-  fontSize:'20px'
-})
-
-const GooglePlusIcon = styled(FaGooglePlusG)({
-  color: '#ffffff',
-  fontSize:'20px'
 })
 
 const CreateText = styled.p({
@@ -87,18 +44,6 @@ const CreateAccountText = styled.span({
   cursor:'pointer'
 })
 
-
-const ForgotPasswordText = styled.p({
-  color: '#8c8c8f',
-  fontWeight: 800,
-  fontSize: '15px',
-  paddingLeft: '5px',
-  width: '100%',
-  display: 'flex',
-  justifyContent: 'flex-end'
-})
-
-
 const CustomForm = styled.form({
   width: '100%'
 })
@@ -115,32 +60,35 @@ const LoginFormComponent = () => {
     formState: { errors },
   } = useForm();
 
+
   const loginUserHandler = async (value:any) => {
     try {
-      const register = await signInWithEmailAndPassword(app, value.email, value.password)
-      if (register.user) {
-        setBtnDetails({
-          loader: false,
-          message: 'User Login successfully'  
-        })
-      }
+      await signInWithEmailAndPassword(app, value.email, value.password)
+      .then((userCredential)=>{
+        const user = userCredential.user;
+        if (user) {
+          setBtnDetails({
+            loader: false,
+            message: 'User Login successfully'
+          })
+          setTimeout(() => {
+            navigate(routeName.LANDING);
+          }, 1000);
+        }
+      }).catch((e)=>{
+        console.log(e)
+      })
 
-      setTimeout(() => {
-        setBtnDetails({
-          loader: false,
-          message: ''  
-        })
-      }, 2000)
 
-    } catch (e: any) { 
+    } catch (e: any) {
       setBtnDetails({
         loader: false,
-        message: 'Login Fail'  
+        message: 'Login Fail'
       })
       setTimeout(() => {
         setBtnDetails({
           loader: false,
-          message: ''  
+          message: ''
         })
       }, 2000)
       const { code, message } = e
@@ -159,19 +107,10 @@ const LoginFormComponent = () => {
 
 
   return (
-    <Container>
-      <FormContainer>
-        <Title>Sign in.</Title>
-        <ButtonDesign>
-          <FacebookIcon />
-          <TextIcon>Continue with Facebook</TextIcon>
-        </ButtonDesign>
-        <ButtonDesign>
-          <GooglePlusIcon />
-          <TextIcon>Continue with Google</TextIcon>
-          </ButtonDesign>
-        <Text>OR</Text>
-        <CustomForm onSubmit={handleSubmit(onSubmit)}>
+    <Container className="h-screen flex justify-center bg-gradient-to-r from-cyan-500 to-blue-500">
+      <FormContainer className='m-auto w-1/4'>
+        <CustomForm className='flex flex-col gap-2 justify-center rounded-2xl text-white bg-blue-900/50 p-9' onSubmit={handleSubmit(onSubmit)}>
+        <Title className='m-auto text-2xl font-semibold pb-9'>Sign in</Title>
       <InputField
           type='text'
           name='email'
@@ -195,6 +134,11 @@ const LoginFormComponent = () => {
             isLoading={btnDetails.loader}
             message={btnDetails.message}
           />
+        <CreateText className='mx-auto'>
+          <AccountText>New here ?</AccountText>
+          <CreateAccountText className='text-blue-900 hover:text-blue-400' onClick={() => navigate(routeName.REGISTRATION)}>Create Account</CreateAccountText>
+        </CreateText>
+        {/* <ForgotPasswordText>Forgot Password?</ForgotPasswordText> */}
           </CustomForm>
         </FormContainer>
     </Container>

@@ -12,7 +12,7 @@ module.exports = {
   ],
   theme: {
     extend: {
-      'wave':"url( '/assets/images/Wtdcmn.jpg' )"
+      'wave':"url( '/assets/images/bg-blue-wavey-dark.jpg' )"
     },
   },
   plugins: [],

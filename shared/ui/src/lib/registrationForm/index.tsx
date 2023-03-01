@@ -10,34 +10,36 @@ import { ref, set, get } from 'firebase/database';
 import { useForm } from 'react-hook-form';
 
 const Container = styled.div({
-  height: '100%',
-  width: '100%',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  backgroundColor: '#1c1c24',
-  flexDirection: 'column',
-  padding: '20px',
+  // height: '100%',
+  // width: '100%',
+  // display: 'flex',
+  // justifyContent: 'center',
+  // alignItems: 'center',
+  // backgroundImage: 'url("/assets/images/Wtdcmn.jpg")',
+  // backgroundRepeat: 'no-repeat',
+  // backgroundSize: 'cover',
+  // flexDirection: 'column',
+  // padding: '20px',
 });
 
 const FormContainer = styled.div({
-  height: '100%',
-  width: '100%',
-  maxWidth: '400px',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  backgroundColor: '#1c1c24',
-  flexDirection: 'column',
-  zIndex: 1,
-  background: 'transparent',
+  // height: '100%',
+  // width: '100%',
+  // maxWidth: '400px',
+  // display: 'flex',
+  // justifyContent: 'center',
+  // alignItems: 'center',
+  // backgroundColor: '#1c1c24',
+  // flexDirection: 'column',
+  // zIndex: 1,
+  // background: 'transparent',
 });
 
 const Title = styled.p({
-  color: '#ffffff',
-  fontWeight: 800,
-  paddingBottom: '50px',
-  fontSize: '44px',
+  // color: '#ffffff',
+  // fontWeight: 800,
+  // paddingBottom: '50px',
+  // fontSize: '44px',
 });
 
 const CreateText = styled.p({
@@ -141,10 +143,10 @@ const LoginFormComponent = () => {
   });
 
   return (
-    <Container>
-      <FormContainer>
-        <Title>Sign up.</Title>
-        <CustomForm onSubmit={handleSubmit(onSubmit)}>
+    <Container className="h-screen flex justify-center bg-gradient-to-r from-cyan-500 to-blue-500">
+      <FormContainer className='m-auto w-1/4'>
+        <CustomForm className='flex flex-col gap-2 justify-center rounded-2xl text-white bg-blue-900/50 p-9' onSubmit={handleSubmit(onSubmit)}>
+          <Title className='m-auto text-2xl font-semibold pb-6'>Sign up</Title>
           <InputField
             type='text'
             name='userName'
@@ -193,15 +195,15 @@ const LoginFormComponent = () => {
             isLoading={btnDetails.loader}
             message={btnDetails.message}
           />
-          <CreateText>
-            <AccountText>Already have an account?</AccountText>
-            <CreateAccountText onClick={() => navigate(routeName.LOGIN)}>
+          <CreateText className='mx-auto'>
+            <AccountText >Already have an account?</AccountText>
+            <CreateAccountText className='text-blue-900 hover:text-blue-400' onClick={() => navigate(routeName.LOGIN)}>
               Sign in
             </CreateAccountText>
           </CreateText>
         </CustomForm>
       </FormContainer>
-    </Container>
+      </Container>
   );
 };
 
