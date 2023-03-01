@@ -180,7 +180,6 @@ const LoginFormComponent = () => {
             isRequired={true}
           register={register}
             errors={errors}
-            
           />
       <InputField
           name='password'
@@ -197,11 +196,6 @@ const LoginFormComponent = () => {
             message={btnDetails.message}
           />
           </CustomForm>
-        <CreateText>
-          <AccountText>Do you have an account?</AccountText>
-          <CreateAccountText onClick={() => navigate(routeName.REGISTRATION)}>Create Account</CreateAccountText>
-        </CreateText>
-        <ForgotPasswordText>Forgot Password?</ForgotPasswordText>
         </FormContainer>
     </Container>
   )
