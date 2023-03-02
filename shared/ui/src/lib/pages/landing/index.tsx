@@ -1,7 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 import Sidebar from '../../component/sidebar'
 import { getAuth, signOut } from "firebase/auth";
-import firebase from 'firebase/compat/app'
 import Button from '../../component/button';
 const Landing = () => {
     const navigate = useNavigate()
@@ -15,16 +14,6 @@ const Landing = () => {
         console.log(error)
         });
     }
-
-    // firebase.auth().onAuthStateChanged(function(user) {
-    //     if (user) {
-    //     console.log("signin")
-    // } else {
-    //     // No user is signed in.
-    //     console.log("not signin")
-    //     }
-    //   });
-
 
   return (
             <div className='flex'>
