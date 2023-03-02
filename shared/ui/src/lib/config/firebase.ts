@@ -1,7 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from 'firebase/auth';
-import { getDatabase } from 'firebase/database';
-
+import { getDatabase } from '@firebase/database';
+import { getFirestore } from '@firebase/firestore'
+import { getStorage } from "firebase/storage";
 //PUT Credential Details here
 const CredDetails = {
   APIKEY: 'AIzaSyCfi-3ISbK82ZI4jk5keCHg7hnxCRU1rGs',
@@ -26,3 +27,5 @@ const firebaseConfig = {
 const initialize = initializeApp(firebaseConfig);
 export const app = getAuth(initialize);
 export const database = getDatabase();
+export const dbfire = getFirestore();
+export const storage = getStorage();

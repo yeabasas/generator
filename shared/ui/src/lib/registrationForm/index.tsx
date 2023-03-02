@@ -143,9 +143,9 @@ const LoginFormComponent = () => {
   });
 
   return (
-    <Container className="h-screen flex justify-center bg-gradient-to-r from-cyan-500 to-blue-500">
+    <Container className="h-screen flex justify-center bg-no-repeat bg-cover bg-wave ">
       <FormContainer className='m-auto w-1/4'>
-        <CustomForm className='flex flex-col gap-2 justify-center rounded-2xl text-white bg-blue-900/50 p-9' onSubmit={handleSubmit(onSubmit)}>
+        <CustomForm className='flex flex-col gap-2 justify-center rounded-2xl text-white bg-blue-900/75 p-9' onSubmit={handleSubmit(onSubmit)}>
           <Title className='m-auto text-2xl font-semibold pb-6'>Sign up</Title>
           <InputField
             type='text'

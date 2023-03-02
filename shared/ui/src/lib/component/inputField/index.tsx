@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 import styled from '@emotion/styled';
 import ErrorText from '../ErrorText';
 const InputField = styled.input({

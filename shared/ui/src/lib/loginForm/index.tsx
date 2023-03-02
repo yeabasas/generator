@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import InputField from '../component/inputField';
 import Button from '../component/button';
@@ -80,6 +81,7 @@ const LoginFormComponent = () => {
       })
 
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       setBtnDetails({
         loader: false,
@@ -107,9 +109,9 @@ const LoginFormComponent = () => {
 
 
   return (
-    <Container className="h-screen flex justify-center bg-gradient-to-r from-cyan-500 to-blue-500">
+    <Container className="h-screen flex justify-center bg-wave bg-no-repeat bg-cover">
       <FormContainer className='m-auto w-1/4'>
-        <CustomForm className='flex flex-col gap-2 justify-center rounded-2xl text-white bg-blue-900/50 p-9' onSubmit={handleSubmit(onSubmit)}>
+        <CustomForm className='flex flex-col gap-2 justify-center rounded-2xl text-white bg-blue-900/75 p-9' onSubmit={handleSubmit(onSubmit)}>
         <Title className='m-auto text-2xl font-semibold pb-9'>Sign in</Title>
       <InputField
           type='text'
