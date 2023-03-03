@@ -9,15 +9,14 @@ import {
 } from "firebase/storage";
 import { v4 } from "uuid";
 import { storage } from '../../config/firebase';
+import { useNavigate } from 'react-router-dom';
 const Application = () => {
-  // const colRef = collection(dbfire,"form")
-  // const [users, setUsers] = useState([]);
   const [name,setName] = useState("")
   const [description,setDescription] = useState("")
   const [imageUpload, setImageUpload] = useState<File | null>(null);
   const [imageUrls, setImageUrls] = useState<any[]>([]);
   const imagesListRef = ref(storage, "images/");
-  
+  const navigate = useNavigate();
   const colRef = collection(dbfire, "application form");
   
   const createUser = async () => {
@@ -31,6 +30,7 @@ const Application = () => {
         console.log("uploaded")
       });
     });
+    navigate('/dnd');
   };
   
   // useEffect(() => {
