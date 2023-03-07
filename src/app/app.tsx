@@ -15,18 +15,23 @@
 
 // export default App;
 
-
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { routes } from '@generator/shared/ui';
-
+import { routes,privateRoutes } from '@generator/shared/ui';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import PrivateRoute from '../../shared/ui/src/lib/config/contex';
 const App = () => {
   return (
-    <Routes>
-      {
-        routes.map((item) => (<Route path={item.pathName} element={item.component} />))
-      }
-    </Routes>
+      <Routes>
+        <Route element={<PrivateRoute />}>
+          {privateRoutes.map((item) => (
+            <Route path={item.pathName} element={item.component} />
+          ))}
+        </Route>
+        {routes.map((item) => (
+          <Route path={item.pathName} element={item.component} />
+        ))}
+      </Routes>
   );
-}
+};
 
 export default App;

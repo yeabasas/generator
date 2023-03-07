@@ -70,7 +70,7 @@ const LoginFormComponent = () => {
         if (user) {
           setBtnDetails({
             loader: false,
-            message: 'User Login successfully'
+            message: 'Logged In'
           })
           setTimeout(() => {
             navigate(routeName.LANDING);

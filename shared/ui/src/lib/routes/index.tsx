@@ -18,7 +18,9 @@ export const routes: IRoute = [
   {
     pathName: routeName.REGISTRATION,
     component: <Registration />,
-  },
+  }
+];
+  export const privateRoutes: IRoute = [
   {
     pathName: routeName.LANDING,
     component: <Landing />,
