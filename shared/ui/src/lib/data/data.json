@@ -1,22 +1,61 @@
-[
-    {
-        "id":1,
-        "appName": "todo",
-        "description": "app to bulid todos"
-    },
-    {
-        "id":2,
-        "appName": "todo2",
-        "description": "app to bulid todos"
-    },
-    {
-        "id":3,
-        "appName": "todo3",
-        "description": "app to bulid todos"
-    },
-    {
-        "id":4,
-        "appName": "todo4",
-        "description": "app to bulid todos"
-    }
-]
+{
+    "Input":[
+        {
+            "id":"1",
+            "type":"button"
+        },
+        {
+            "id":"2",
+            "type":"checkbox"
+        },
+        {
+            "id":"4",
+            "type":"date"
+        },
+        {
+            "id":"4",
+            "type":"email"
+        },
+        {
+            "id":"4",
+            "type":"file"
+        },
+        {
+            "id":"4",
+            "type":"image"
+        },
+        {
+            "id":"4",
+            "type":"month"
+        },
+        {
+            "id":"4",
+            "type":"number"
+        },
+        {
+            "id":"4",
+            "type":"password"
+        },
+        {
+            "id":"4",
+            "type":"radio"
+        },
+        {
+            "id":"4",
+            "type":"text"
+        }
+
+    ],
+    "img":[
+        {
+            "id":"1",
+            "src":"url"
+        }
+    ],
+    "select":[
+        {
+            "id":"1",
+            "name":"string"
+        }
+    ]
+}

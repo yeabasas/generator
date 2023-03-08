@@ -7,8 +7,8 @@ import { useForm } from 'react-hook-form';
 import { routeName } from '../../constant';
 
 const CustomForm = styled.form({
-  width: '100%'
-})
+  width: '100%',
+});
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -41,22 +41,29 @@ const Sidebar = () => {
       });
   };
   return (
-    <div className="h-screen border border-blue-100 p-6 w-1/5 shadow-2xl h-screen rounded m-1">
+    <div className="h-screen flex flex-col justify-between border border-blue-100 p-6 w-1/5 shadow-2xl h-screen rounded m-1">
+      <div className="flex flex-col">
       <h1 className="text-xl mb-4 border-2 border-gray border-b-white-500 border-t-0 border-l-0 border-r-0">
         Design
       </h1>
-      <Link className="hover:text-blue-600 " to="/application">
-        Application
-      </Link>
-      <CustomForm onSubmit={handleSubmit(SignOut)}>
-        <Button
-          onClick={SignOut}
-          name="Signout"
-          type="submit"
-          isLoading={btnDetails.loader}
-          message={btnDetails.message}
-        />
-      </CustomForm>
+        <Link className="hover:text-blue-600  my-2" to="/application">
+          Application
+        </Link>
+        <Link className="hover:text-blue-600 my-2 " to="/applicationForm">
+          form
+        </Link>
+      </div>
+      <div className='w-full'>
+        <CustomForm onSubmit={handleSubmit(SignOut)}>
+          <Button
+            onClick={SignOut}
+            name="Signout"
+            type="submit"
+            isLoading={btnDetails.loader}
+            message={btnDetails.message}
+          />
+        </CustomForm>
+      </div>
     </div>
   );
 };

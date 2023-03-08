@@ -3,7 +3,8 @@ export const routeName = {
   REGISTRATION: '/registration',
   LANDING:'/landing',
   DND:'/dnd',
-  APPLICATION:'/application'
+  APPLICATION:'/application',
+  APPLICATIONFORM:'/applicationform'
 }
 
 export const REGEX = {

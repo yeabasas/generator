@@ -15,9 +15,10 @@
     "baseUrl": ".",
     "jsx": "react-jsx",
     "allowJs": false,
-    "esModuleInterop": false,
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "noPropertyAccessFromIndexSignature": false,
+    "resolveJsonModule": true,
     "strict": true,
     "types": ["vite/client", "vitest"],
     "paths": {
@@ -35,5 +36,5 @@
     }
   ],
   "compileOnSave": false,
-  "exclude": ["node_modules", "tmp"]
+  "exclude": ["node_modules", "tmp"],
 }
