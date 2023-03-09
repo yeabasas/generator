@@ -27,8 +27,8 @@ const App = () => {
             <Route path={item.pathName} element={item.component} />
           ))}
         </Route>
-        {routes.map((item) => (
-          <Route path={item.pathName} element={item.component} />
+        {routes.map((item, index) => (
+          <Route key={index} path={item.pathName} element={item.component} />
         ))}
       </Routes>
   );

@@ -5,9 +5,10 @@ import styled from '@emotion/styled';
 import { routeName, REGEX, ENABLE_FIREBASE } from '../constant';
 import { useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { app, database } from '../config/firebase';
+import { app, database, dbfire } from '../config/firebase';
 import { ref, set, get } from 'firebase/database';
 import { useForm } from 'react-hook-form';
+import { addDoc, collection, doc, setDoc} from 'firebase/firestore';
 
 const Container = styled.div({
   // height: '100%',
@@ -67,18 +68,18 @@ const CreateAccountText = styled.span({
   cursor: 'pointer',
 });
 
-const LoginFormComponent = () => {
+/***********styled ended */
+
+function LoginFormComponent() {
   const [btnDetails, setBtnDetails] = useState({
     loader: false,
     message: '',
   });
   const navigate = useNavigate();
   const {
-    register,
-    handleSubmit,
-    formState: { errors },
+    register, handleSubmit, formState: { errors },
   } = useForm();
-
+  const colRef = collection(dbfire, 'users');
   const registerUserHandler = async (values: any) => {
     try {
       const userDetails = {
@@ -87,10 +88,17 @@ const LoginFormComponent = () => {
         mobile: values.mobileNumber,
         address: values.address,
       };
-
-      const key = values.email.split('@')[0];
+      const user = await createUserWithEmailAndPassword(
+        app,
+        values.email,
+        values.password
+      );
+      /***************realtime database */
+      const key = user.user.uid
       const starCountRef = ref(database, `users/${key}`);
       const value = (await get(starCountRef)).val();
+      /************fireStore */
+      await setDoc(doc(dbfire,'users',key),userDetails);
 
       if (value?.email) {
         setBtnDetails({
@@ -100,18 +108,15 @@ const LoginFormComponent = () => {
         setTimeout(() => {
           setBtnDetails({
             loader: false,
-            message: ''  
-          })
-        }, 2000)
+            message: ''
+          });
+        }, 2000);
         return;
       }
 
-      await set(ref(database, `users/${key}`), userDetails);
-      await createUserWithEmailAndPassword(
-        app,
-        values.email,
-        values.password
-      );
+     
+     await set(ref(database, `users/${user.user.uid}`), userDetails);
+
       setBtnDetails({
         loader: false,
         message: 'Account created Successfully',
@@ -130,7 +135,8 @@ const LoginFormComponent = () => {
   };
 
   const onSubmit = (values: any) => {
-    if (!ENABLE_FIREBASE) return
+    if (!ENABLE_FIREBASE)
+      return;
     setBtnDetails((pre) => ({
       ...pre,
       loader: true,
@@ -153,8 +159,7 @@ const LoginFormComponent = () => {
             placeholder='Username'
             isRequired={true}
             register={register}
-            errors={errors}
-          />
+            errors={errors} />
           <InputField
             type='text'
             name='email'
@@ -162,8 +167,7 @@ const LoginFormComponent = () => {
             isRequired={true}
             register={register}
             errors={errors}
-            pattern={REGEX.EMAIL}
-          />
+            pattern={REGEX.EMAIL} />
           <InputField
             type='text'
             name='mobileNumber'
@@ -171,40 +175,36 @@ const LoginFormComponent = () => {
             pattern={REGEX.MOBILE}
             isRequired={true}
             register={register}
-            errors={errors}
-          />
+            errors={errors} />
           <InputField
             type='text'
             name='address'
             placeholder='Address'
             isRequired={true}
             register={register}
-            errors={errors}
-          />
+            errors={errors} />
           <InputField
             type='password'
             name='password'
             placeholder='Password'
             isRequired={true}
             register={register}
-            errors={errors}
-          />
+            errors={errors} />
           <Button
             name='Create Account'
             type='submit'
             isLoading={btnDetails.loader}
-            message={btnDetails.message}
-          />
+            message={btnDetails.message} />
           <CreateText className='mx-auto'>
-            <AccountText >Already have an account?</AccountText>
+            <AccountText>Already have an account?</AccountText>
             <CreateAccountText className='text-blue-900 hover:text-blue-400' onClick={() => navigate(routeName.LOGIN)}>
               Sign in
             </CreateAccountText>
           </CreateText>
         </CustomForm>
       </FormContainer>
-      </Container>
+    </Container>
   );
-};
+}
 
 export default LoginFormComponent;

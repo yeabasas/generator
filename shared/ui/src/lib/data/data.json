@@ -1,61 +1,54 @@
 {
     "Input":[
         {
-            "id":"1",
             "type":"button"
         },
         {
-            "id":"2",
             "type":"checkbox"
         },
         {
-            "id":"4",
             "type":"date"
         },
         {
-            "id":"4",
             "type":"email"
         },
         {
-            "id":"4",
             "type":"file"
         },
         {
-            "id":"4",
             "type":"image"
         },
         {
-            "id":"4",
             "type":"month"
         },
         {
-            "id":"4",
             "type":"number"
         },
         {
-            "id":"4",
             "type":"password"
         },
         {
-            "id":"4",
             "type":"radio"
         },
         {
-            "id":"4",
             "type":"text"
         }
 
     ],
     "img":[
         {
-            "id":"1",
-            "src":"url"
+            "name":"image",
+            "type":"img"
         }
     ],
     "select":[
         {
-            "id":"1",
-            "name":"string"
+            "type":"select"
+        }
+    ],
+    "option":[
+        {
+            "type":"option"
         }
     ]
 }

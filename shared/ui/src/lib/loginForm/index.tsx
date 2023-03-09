@@ -1,3 +1,4 @@
+/* eslint-disable @nrwl/nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import InputField from '../component/inputField';
@@ -8,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import {signInWithEmailAndPassword} from 'firebase/auth';
 import { app } from '../config/firebase';
 import { useForm } from 'react-hook-form';
-import console from 'console';
+import { useCookies } from 'react-cookie';
 const Container = styled.div({})
 
 const FormContainer = styled.div({})
@@ -60,13 +61,14 @@ const LoginFormComponent = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-
+ const [cookies, setCookie, removeCookie] =useCookies()
 
   const loginUserHandler = async (value:any) => {
     try {
       await signInWithEmailAndPassword(app, value.email, value.password)
       .then((userCredential)=>{
         const user = userCredential.user;
+        setCookie('user', user.uid)
         if (user) {
           setBtnDetails({
             loader: false,
@@ -140,7 +142,6 @@ const LoginFormComponent = () => {
           <AccountText>New here ?</AccountText>
           <CreateAccountText className='text-blue-900 hover:text-blue-400' onClick={() => navigate(routeName.REGISTRATION)}>Create Account</CreateAccountText>
         </CreateText>
-        {/* <ForgotPasswordText>Forgot Password?</ForgotPasswordText> */}
           </CustomForm>
         </FormContainer>
     </Container>

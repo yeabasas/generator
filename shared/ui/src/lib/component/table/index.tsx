@@ -1,8 +1,9 @@
 import {
   onSnapshot,
   collection,} from "firebase/firestore";
-import { getStorage, ref, listAll,getDownloadURL } from "firebase/storage";
-import React,{useEffect, useState} from "react";
+import { ref, listAll,getDownloadURL } from "firebase/storage";
+import {useEffect, useState} from "react";
+import { Link } from "react-router-dom";
 import { dbfire } from "../../config/firebase";
 import {storage}  from '../../config/firebase'
 const Table = ()=>{
@@ -20,22 +21,20 @@ const Table = ()=>{
       display()
     }
   },[])
-  // const unsub = onSnapshot(doc(dbfire, "application form","sf"), (doc) => {
-  //     console.log("Current data: ", doc.data());
-  // });
   return(
     <>
-      <table className="shadow-xl border w-full">
+      <table className="w-full">
         <thead>
           <th className="border">App Name</th>
           <th className="border">Description</th>
-          <th className="border">image</th>
+          {/* <th></th> */}
         </thead>
         <tbody className="mx-auto">
-          {posts.map((post:any)=>(
-            <tr className="">
+          {posts.map((post:any, index)=>(
+            <tr key={index} className="">
               <td className="border ">{post.name}</td>
               <td className="border ">{post.description}</td>
+              <td><Link to='/application/applicationform'><button className="border">Details</button></Link> </td>
             </tr>
           ))}
         </tbody>

@@ -1,7 +1,10 @@
-import React from 'react'
+import { doc, collection } from 'firebase/firestore';
+import React, { useState } from 'react'
+import { dbfire } from '../../config/firebase'
 import Sidebar from '../sidebar'
-
 const AppForm = () => {
+  const colRef = collection(dbfire, 'users');
+  console.log(colRef.id)
   return (
     <div className='mx-16 flex m-auto shadow-2xl border'>
         <Sidebar/>

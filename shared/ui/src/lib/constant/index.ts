@@ -4,7 +4,7 @@ export const routeName = {
   LANDING:'/landing',
   DND:'/dnd',
   APPLICATION:'/application',
-  APPLICATIONFORM:'/applicationform'
+  APPLICATIONFORM:'/application/applicationform'
 }
 
 export const REGEX = {
