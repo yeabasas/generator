@@ -9,7 +9,6 @@ import React, { useState } from 'react';
 import data from '../../data/data.json';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { v4 } from 'uuid';
-// import { useAuth } from '../../config/contex'
 import { storage } from '../../config/firebase';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
