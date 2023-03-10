@@ -23,8 +23,8 @@ const App = () => {
   return (
       <Routes>
         <Route element={<PrivateRoute />}>
-          {privateRoutes.map((item) => (
-            <Route path={item.pathName} element={item.component} />
+          {privateRoutes.map((item,index) => (
+            <Route key={index} path={item.pathName} element={item.component} />
           ))}
         </Route>
         {routes.map((item, index) => (

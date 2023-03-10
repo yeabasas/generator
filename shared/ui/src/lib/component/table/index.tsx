@@ -25,9 +25,11 @@ const Table = ()=>{
     <>
       <table className="w-full">
         <thead>
-          <th className="border">App Name</th>
-          <th className="border">Description</th>
-          {/* <th></th> */}
+          <tr>
+            <th className="border">App Name</th>
+            <th className="border">Description</th>
+            {/* <th></th> */}
+          </tr>
         </thead>
         <tbody className="mx-auto">
           {posts.map((post:any, index)=>(
@@ -67,27 +69,6 @@ listAll(listRef)
     console.log(error)
   });
 
-  getDownloadURL(ref(storage, 'images/Screenshot (1).png464147cd-fda3-4aca-824f-04f789252215'))
-    .then((url) => {
-      // `url` is the download URL for 'images/stars.jpg'
-  
-      // This can be downloaded directly:
-      const xhr = new XMLHttpRequest();
-      xhr.responseType = 'blob';
-      xhr.onload = (event) => {
-        const blob = xhr.response;
-      };
-      xhr.open('GET', url);
-      xhr.send();
-  
-      // Or inserted into an <img> element
-      const img = document.getElementById('myimg');
-      // img.setAttribute('src', url);
-    })
-    .catch((error) => {
-      // Handle any errors
-      console.log(error)
-    });
 
 
 

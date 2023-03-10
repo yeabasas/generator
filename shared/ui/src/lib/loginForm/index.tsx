@@ -49,7 +49,7 @@ const CreateAccountText = styled.span({
 const CustomForm = styled.form({
   width: '100%'
 })
-
+/********************************* */
 const LoginFormComponent = () => {
   const [btnDetails, setBtnDetails] = useState({
     loader: false,
@@ -68,7 +68,7 @@ const LoginFormComponent = () => {
       await signInWithEmailAndPassword(app, value.email, value.password)
       .then((userCredential)=>{
         const user = userCredential.user;
-        setCookie('user', user.uid)
+        setCookie('user', user.uid,{ path:'/'})
         if (user) {
           setBtnDetails({
             loader: false,

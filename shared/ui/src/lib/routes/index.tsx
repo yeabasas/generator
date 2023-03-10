@@ -5,6 +5,7 @@ import Landing from '../pages/landing';
 import Registration from '../registrationForm';
 import Application from '../pages/application';
 import Dnd from '../pages/dnd'
+import NotFound from '../pages/notFound'
 import ApplicationForm from '../pages/applicationForm';
 type IRoute = {
   pathName: string,
@@ -37,5 +38,9 @@ export const routes: IRoute = [
   {
     pathName: routeName.APPLICATIONFORM,
     component: <ApplicationForm />,
+  },
+  {
+    pathName: routeName.NOTFOUND,
+    component: <NotFound />,
   },
 ];

@@ -1,40 +1,31 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import { dbfire } from '../../config/firebase';
 import Sidebar from '../../component/sidebar';
-import { collection, addDoc, doc, setDoc } from 'firebase/firestore';
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { collection, doc, setDoc } from 'firebase/firestore';
 import Table from '../../component/table';
-import { nanoid } from 'nanoid';
-import React, { useState } from 'react';
-import data from '../../data/data.json';
+import { useState } from 'react';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { v4 } from 'uuid';
 import { storage } from '../../config/firebase';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
-
+import Footer  from '../../component/footer'
 
 const Application = () => {
   const [name, setName] = useState('');
-  // const { user} =useAuth()
   const [description, setDescription] = useState('');
   const [imageUpload, setImageUpload] = useState<File | null>(null);
   const [imageUrls, setImageUrls] = useState<any[]>([]);
-  const imagesListRef = ref(storage, 'images/');
-  const navigate = useNavigate();
-  const colRef = collection(dbfire, 'application form');
   const [cookies, setCookie, removeCookie] =useCookies()
-  console.log('====================================');
-  console.log(cookies['user'].uid);
-  console.log('====================================');
   const appDetails ={
     name:name,
     description:description
   }
   const key = cookies['user']
   const createApp = async () => {
-    removeCookie('users')
-    await setDoc(doc(dbfire,'application form',key),appDetails).then(() => {
+    await setDoc(doc(dbfire,'application form',key),appDetails)
+    .then(() => {
+        // setCookie('user', user.uid,{ path:'/'})
       console.log('created');
     });
     if (imageUpload == null) return;
@@ -119,6 +110,7 @@ const Application = () => {
             <Table/>
           </div>
         </div>
+      <Footer/>
       </div>
     </div>
   );
