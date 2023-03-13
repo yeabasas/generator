@@ -1,61 +1,55 @@
-import { Link, useNavigate } from 'react-router-dom'
 import Sidebar from '../../component/sidebar'
-import { getAuth, signOut } from "firebase/auth";
-import Button from '../../component/button';
-import { useState } from 'react';
 import styled from '@emotion/styled';
-import { useForm } from 'react-hook-form';
-import { routeName } from '../../constant';
-const CustomForm = styled.form({
-    width: '100%'
-  })
+import { Layout, Table, theme } from 'antd';
+import Footer from '../../component/footer';
+import { useState } from 'react';
+
 const Landing = () => {
-    const navigate = useNavigate()
-    const auth = getAuth();
+  const items: any[] | (() => any[]) = []
+  const [data,setData]=useState<any[]>(items)
+    const { Content } = Layout;
     const {
-        handleSubmit,
-        formState: { errors },
-      } = useForm();
-    const [btnDetails, setBtnDetails] = useState({
-        loader: false,
-        message: ''
-      })
+      token: { colorBgContainer },
+    } = theme.useToken();
+    const dataSource = [
+      {data['items'].map((item,index)=>{
+        return(
+          [
+            key:{}
+          ]
+        )
+      })}
+    ]
 
-    const SignOut = ()=>{
-        signOut(auth).then(() => {
-            if (auth) {
-                setBtnDetails({
-                  loader: false,
-                  message: 'LOGGED OUT'
-                })
-                setTimeout(() => {
-                  navigate(routeName.LOGIN);
-                }, 1000);
-              }
-        navigate('/')
-        }).catch((error) => {
-        console.log(error)
-        });
-    }
-
+    const columns = [
+      {
+        title: 'AppName',
+        dataIndex: 'AppName',
+        key: 'appName',
+      },
+      {
+        title: 'Description',
+        dataIndex: 'Description',
+        key: 'description',
+      }
+    ]
   return (
-            <div className='flex'>
-                <Sidebar/>
-                <div className='flex flex-col'>
-                    <h1>Welcome to Landing!</h1>
-                    <Link to='/'>Sign In</Link>
-                    <Link to='/registration'>Sign Up</Link>
-                    <CustomForm onSubmit={handleSubmit(SignOut)}> 
-                    <Button
-                    onClick={SignOut}
-                        name="Signout"
-                        type='submit'
-                        isLoading={btnDetails.loader}
-                        message={btnDetails.message}
-                    /> 
-                    </CustomForm>
-                </div>
+    <div className='flex'>
+      <Layout>
+        <Sidebar/>
+        <div className='flex flex-col w-full'>
+          <Content style={{ margin: '24px 16px 0' }}>
+            <div className='flex' style={{ padding: 24, background: colorBgContainer }}>
+              <h1 className='mx-auto font-bold text-2xl'>Created Apps</h1>
             </div>
+            <div style={{ padding: 24,paddingTop: 0, minHeight: 360, background: colorBgContainer }}>
+              <Table columns={columns} dataSource={dataSource}/>
+            </div>
+          </Content>
+          <Footer/>
+        </div>
+        </Layout>
+    </div>
   )
 }
 

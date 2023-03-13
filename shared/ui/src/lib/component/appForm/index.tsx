@@ -1,16 +1,22 @@
-import { doc, setDoc ,getDoc} from 'firebase/firestore';
+import { doc, setDoc} from 'firebase/firestore';
 import { useState } from 'react';
-import { database, dbfire } from '../../config/firebase';
+import { dbfire } from '../../config/firebase';
 import Sidebar from '../sidebar';
 import { useCookies } from 'react-cookie';
-import FormTable from '../table/formTable';
+import { Layout, Input, Button, Form, theme } from 'antd';
+import Footer from '../footer';
+import {PlusSquareOutlined} from '@ant-design/icons'
+import { useNavigate } from 'react-router-dom';
+
 const AppForm = () => {
   const [formName, setFormName] = useState('');
   const [description, setDescription] = useState('');
   const [formKey, setFormKey] = useState('');
   const [cookies] = useCookies();
   const [formList,setFormList]=useState([{ formName:"",formKey:"",Description:""}])
-
+  const {token: { colorBgContainer },} = theme.useToken();
+  const navigate = useNavigate();
+  
   const key = cookies['user'];
 
   const formDetails = {
@@ -18,73 +24,80 @@ const AppForm = () => {
     formKey: formKey,
     description: description,
   };
+
+  
+  const [form] = Form.useForm();
+  const [formLayout, setFormLayout] = useState<LayoutType>('inline');
+
+  type LayoutType = Parameters<typeof Form>[0]['layout'];
+
+  const formItemLayout =
+  formLayout === 'inline' ? { labelCol: { span: 8 }, wrapperCol: { span: 14 } } : null;
+
+  const buttonItemLayout =
+  formLayout === 'inline' ? { wrapperCol: { span: 14, offset: 4 } } : null;
+
+  const { Content } = Layout;
   const createForm = async (event:any) => {
     event.preventDefault();
     try {
       await setDoc(doc(dbfire, 'form', key), formDetails)
       .then(() => {
         console.log('created');
+        navigate('/application/applicationform/createComponents')
       });
     } catch (error) {
       console.log(error)
     }
   };
-
-  // const handleFormListChange = (e:any,index:any)=>{
-  //   const { formName , nameValue } = e.target;
-  //   const { formKey , keyValue } = e.target;
-  //   const { description , desValue } = e.target;
-  //   const list = [...formList];
-  //   // list[index][formName]= nameValue
-  //   // list[index][formKey]= keyValue
-  //   // list[index][description]= desValue
-  //   setFormList(list)
-  // }
-
-  const handleFormAdd = () => {
-    setFormList([...formList,{ formName:"",formKey:"",Description:"" }])
-  }
   return (
-    <div className="mx-16 flex m-auto shadow-2xl border">
-      <Sidebar />
-      <div className='mt-4 mx-auto w-fit flex flex-col'>
-        <h1 className='mx-auto mb-4 font-bold text-2xl'>name of the app</h1>
-        <button className=' text-right bg-blue-500 hover:bg-blue-600 rounded-md px-3 py-1 font-semibold tracking-wider text-white ' onClick={handleFormAdd}>add</button>
-        {formList.map((formData,index) => (
-        <form key={index} className="w-full flex justify-around">
-          <input
-            name="formName"
-            className="border mr-4"
-            type="text"
-            placeholder="name"
-            onChange={(e) => {
-              setFormName(e.target.value);
-            }}
-          />
-          <input
-            name="formKey"
-            className="border mr-4"
-            type="text"
-            placeholder="key"
-            onChange={(e) => {
-              setFormKey(e.target.value);
-            }}
-          />
-          <input
-            name="description"
-            className="border mr-4"
-            type="text"
-            placeholder="description"
-            onChange={(e) => {
-              setDescription(e.target.value);
-            }}
-          />
-          <button onClick={createForm} className="border">Create From</button>
-        </form>
-        ))}
-        <FormTable/>
+    <div className='flex'>
+    <Layout>
+      <Sidebar/>
+      <div className='flex flex-col w-full'>
+        {/* <Header style={{ padding: 0, background: colorBgContainer }} /> */}
+        <Content style={{ margin: '24px 16px 0' }}>
+          <div style={{ padding: 24, background: colorBgContainer }}>
+            <Form
+                {...formItemLayout}
+                layout={formLayout}
+                form={form}
+                className='flex w-full'
+              >
+                <Form.Item label="Form Name">
+                  <Input 
+                  name='formName'
+                  required
+                  placeholder="Form name"  
+                  onChange={(e)=>{setFormName(e.target.value)}}/>
+                </Form.Item>
+                <Form.Item label="Key">
+                  <Input 
+                  required
+                  name='formKey'
+                  placeholder="Key" 
+                  onChange={(e) => {setFormKey(e.target.value);}} />
+                </Form.Item>
+                <Form.Item label="Description">
+                  <Input 
+                  name='description'
+                  required
+                  placeholder="Some thing..." 
+                  onChange={(e) => {setDescription(e.target.value);}}/>
+                </Form.Item>
+                <Form.Item {...buttonItemLayout}>
+                  <Button onClick={createForm} type="default">Submit</Button>
+                </Form.Item>
+              </Form>
+          </div>
+          {/* <div style={{ padding: 24, minHeight: 360, background: colorBgContainer }}>
+            <Table columns={columns}/>
+          </div> */}
+        </Content>
+        <Footer/>
       </div>
-    </div>
+      </Layout>
+  </div>
   );
 };
 

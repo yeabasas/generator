@@ -5,6 +5,7 @@ export const routeName = {
   DND:'/dnd',
   APPLICATION:'/application',
   APPLICATIONFORM:'/application/applicationform',
+  CREATECOMPONENTS:'/application/applicationform/createComponents',
   NOTFOUND:'*'
 }
 

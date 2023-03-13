@@ -1,8 +1,9 @@
+import { Layout, theme ,Input,Button, Form} from 'antd';
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import { dbfire } from '../../config/firebase';
 import Sidebar from '../../component/sidebar';
-import { collection, doc, setDoc } from 'firebase/firestore';
-import Table from '../../component/table';
+import { doc, setDoc } from 'firebase/firestore';
+// import Table from '../../component/table';
 import { useState } from 'react';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { v4 } from 'uuid';
@@ -12,107 +13,99 @@ import { useCookies } from 'react-cookie';
 import Footer  from '../../component/footer'
 
 const Application = () => {
-  const [name, setName] = useState('');
+  const [appName, setAppName] = useState('');
   const [description, setDescription] = useState('');
   const [imageUpload, setImageUpload] = useState<File | null>(null);
   const [imageUrls, setImageUrls] = useState<any[]>([]);
-  const [cookies, setCookie, removeCookie] =useCookies()
-  const appDetails ={
-    name:name,
-    description:description
-  }
+  const [cookies] =useCookies()
+  const {token: { colorBgContainer },} = theme.useToken();
+  const navigate =useNavigate()
+
+  const [form] = Form.useForm();
+  const [formLayout, setFormLayout] = useState<LayoutType>('inline');
+
+  type LayoutType = Parameters<typeof Form>[0]['layout'];
+
+  const formItemLayout =
+  formLayout === 'inline' ? { labelCol: { span: 8 }, wrapperCol: { span: 14 } } : null;
+
+  const buttonItemLayout =
+  formLayout === 'inline' ? { wrapperCol: { span: 14, offset: 4 } } : null;
+
+  const { Content } = Layout;
+  const appDetails ={ name:appName, description:description}
   const key = cookies['user']
+
   const createApp = async () => {
-    await setDoc(doc(dbfire,'application form',key),appDetails)
-    .then(() => {
-        // setCookie('user', user.uid,{ path:'/'})
-      console.log('created');
-    });
-    if (imageUpload == null) return;
-    const imageRef = ref(storage, `images/${cookies['user']}/${imageUpload.name + v4()}`);
-    uploadBytes(imageRef, imageUpload).then((snapshot) => {
-      getDownloadURL(snapshot.ref).then((url) => {
-        setImageUrls((prev) => [...prev, url]);
-      });
-      console.log('uploaded');
-    });
+   try {
+     await setDoc(doc(dbfire,'application form',key),appDetails)
+     .then(() => {
+         // setCookie('user', user.uid,{ path:'/'})
+       console.log('created');
+     });
+     if (imageUpload == null) return;
+     const imageRef = ref(storage, `images/${cookies['user']}/${imageUpload.name + v4()}`);
+     uploadBytes(imageRef, imageUpload).then((snapshot) => {
+       getDownloadURL(snapshot.ref).then((url) => {
+         setImageUrls((prev) => [...prev, url]);
+       });
+       console.log('uploaded');
+     });
+     navigate('/application/applicationForm')
+   } catch (error) {
+    console.log(error)
+   }
   };
 
   return (
-    <div className="h-screen mx-16 flex justify-center shadow-2xl">
-      <Sidebar />
-      <div className="mx-auto w-full">
-        <div className="w-full flex flex-col gap-2 justify-center rounded-2xl bg-gra-400/50 p-9">
-          <h1 className="m-auto text-2xl font-semibold pb-2 border-2 border-gray border-b-white-500 border-t-0 border-l-0 border-r-0">
-            Create a Web App
-          </h1>
-          <div className="mt-2">
-            <table className="shadow-xl border w-full">
-              <thead>
-                <tr>
-                  <th>app name</th>
-                  <th>description</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <input
-                      className="m-4 border"
-                      type="text"
-                      name="appName"
-                      required
-                      placeholder="Enter a app name..."
-                      onChange={(e) => {
-                        setName(e.target.value);
-                      }}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      className=" m-4 border"
-                      type="text"
-                      name="description"
-                      required
-                      placeholder="Enter an description..."
-                      onChange={(e) => {
-                        setDescription(e.target.value);
-                      }}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      name="icon"
-                      type="file"
-                      placeholder="Icon/Logo"
-                      required
-                      onChange={(event) => {
-                        setImageUpload(event.target.files?.[0] || null);
-                      }}
-                    />
-                  </td>
-                  <td>
-                    <button
-                      onClick={createApp}
-                      className="m-4 border"
-                      type="submit"
-                    >
-                      create
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+    <div className='flex'>
+    <Layout>
+      <Sidebar/>
+      <div className='flex flex-col w-full'>
+        {/* <Header style={{ padding: 0, background: colorBgContainer }} /> */}
+        <Content style={{ margin: '24px 16px 0' }}>
+          <div style={{ padding: 24, background: colorBgContainer }}>
+          <Form
+              {...formItemLayout}
+              layout={formLayout}
+              form={form}
+              className='flex w-full'
+            >
+              <Form.Item label="App Name">
+                <Input 
+                name='appName'
+                required
+                placeholder="Application name"  
+                onChange={(e)=>{setAppName(e.target.value)}}/>
+              </Form.Item>
+              <Form.Item label="Description">
+                <Input 
+                name='description'
+                required
+                placeholder="Some thing..." 
+                onChange={(e) => {setDescription(e.target.value);}}/>
+              </Form.Item>
+              <Form.Item label="Image">
+                <Input 
+                required
+                name='icon'
+                type='file' 
+                placeholder="icon img" 
+                onChange={(e) => {setImageUpload(e.target.files?.[0] || null);}} />
+              </Form.Item>
+              <Form.Item {...buttonItemLayout}>
+                <Button onClick={createApp} type="default">Submit</Button>
+              </Form.Item>
+            </Form>
           </div>
-          <div className='flex flex-col justify-around' >
-            <h1 className='font-bold text-2xl m-auto'>Created Apps</h1>
-            <Table/>
-          </div>
-        </div>
-      <Footer/>
+          {/* <div style={{ padding: 24, minHeight: 360, background: colorBgContainer }}>
+            <Table columns={columns}/>
+          </div> */}
+        </Content>
+        <Footer/>
       </div>
-    </div>
+      </Layout>
+  </div>
   );
 };
 

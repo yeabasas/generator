@@ -7,6 +7,7 @@ import Application from '../pages/application';
 import Dnd from '../pages/dnd'
 import NotFound from '../pages/notFound'
 import ApplicationForm from '../pages/applicationForm';
+import CreateComponents from '../pages/createComponents'
 type IRoute = {
   pathName: string,
   component: JSX.Element | JSX.Element[] | ReactNode
@@ -38,6 +39,10 @@ export const routes: IRoute = [
   {
     pathName: routeName.APPLICATIONFORM,
     component: <ApplicationForm />,
+  },
+  {
+    pathName: routeName.CREATECOMPONENTS,
+    component: <CreateComponents />,
   },
   {
     pathName: routeName.NOTFOUND,
