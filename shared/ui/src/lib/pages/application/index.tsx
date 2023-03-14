@@ -1,8 +1,20 @@
-import { Layout, theme ,Input,Button, Form} from 'antd';
+import {
+  Layout,
+  theme,
+  Input,
+  Button,
+  Form,
+  Card,
+  Alert,
+} from 'antd';
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
+
 import { dbfire } from '../../config/firebase';
 import Sidebar from '../../component/sidebar';
-import { doc, setDoc } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+} from 'firebase/firestore';
 // import Table from '../../component/table';
 import { useState } from 'react';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -10,102 +22,150 @@ import { v4 } from 'uuid';
 import { storage } from '../../config/firebase';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
-import Footer  from '../../component/footer'
+import Footer from '../../component/footer';
+import Table from '../../component/table';
 
 const Application = () => {
   const [appName, setAppName] = useState('');
   const [description, setDescription] = useState('');
   const [imageUpload, setImageUpload] = useState<File | null>(null);
-  const [imageUrls, setImageUrls] = useState<any[]>([]);
-  const [cookies] =useCookies()
-  const {token: { colorBgContainer },} = theme.useToken();
-  const navigate =useNavigate()
+  const [imageUrs, setImageUrls] = useState<any[]>([]);
+  const [cookies] = useCookies();
+  const {
+    token: { colorBgContainer },
+  } = theme.useToken();
+  const navigate = useNavigate();
+  const key = cookies['user'];
 
   const [form] = Form.useForm();
-  const [formLayout, setFormLayout] = useState<LayoutType>('inline');
+  const [formLayout] = useState<LayoutType>('horizontal');
 
   type LayoutType = Parameters<typeof Form>[0]['layout'];
 
   const formItemLayout =
-  formLayout === 'inline' ? { labelCol: { span: 8 }, wrapperCol: { span: 14 } } : null;
+    formLayout === 'horizontal'
+      ? { labelCol: { span: 3 }, wrapperCol: { span: 12 } }
+      : null;
 
   const buttonItemLayout =
-  formLayout === 'inline' ? { wrapperCol: { span: 14, offset: 4 } } : null;
+    formLayout === 'horizontal'
+      ? { wrapperCol: { span: 14, offset: 4 } }
+      : null;
 
   const { Content } = Layout;
-  const appDetails ={ name:appName, description:description}
-  const key = cookies['user']
+  const appDetails = { name: appName, description: description, userId: key };
+  const colRef = collection(dbfire, 'application form');
+  // let q = query(colRef,where('user','==',key))
 
   const createApp = async () => {
-   try {
-     await setDoc(doc(dbfire,'application form',key),appDetails)
-     .then(() => {
-         // setCookie('user', user.uid,{ path:'/'})
-       console.log('created');
-     });
-     if (imageUpload == null) return;
-     const imageRef = ref(storage, `images/${cookies['user']}/${imageUpload.name + v4()}`);
-     uploadBytes(imageRef, imageUpload).then((snapshot) => {
-       getDownloadURL(snapshot.ref).then((url) => {
-         setImageUrls((prev) => [...prev, url]);
-       });
-       console.log('uploaded');
-     });
-     navigate('/application/applicationForm')
-   } catch (error) {
-    console.log(error)
-   }
+    try {
+      await addDoc(colRef, appDetails).then(() => {
+        <Alert
+          className="flex"
+          message="App Created"
+          type="success"
+          showIcon
+        />;
+      });
+      if (imageUpload == null) return;
+      const imageRef = ref(
+        storage,
+        `images/${cookies['user']}/${imageUpload.name + v4()}`
+      );
+      uploadBytes(imageRef, imageUpload).then((snapshot) => {
+        getDownloadURL(snapshot.ref).then((url) => {
+          setImageUrls((prev) => [...prev, url]);
+        });
+        console.log('uploaded');
+      });
+      navigate('/application/applicationForm');
+    } catch (error) {
+      console.log(error);
+    }
   };
 
+  const columns = [
+    {
+      title: 'AppName',
+      dataIndex: 'AppName',
+      key: 'appName',
+      // render:(datas:any)=>data.map(datas=>datas.AppName)
+    },
+    {
+      title: 'Description',
+      dataIndex: 'Description',
+      key: 'description',
+    },
+  ];
   return (
-    <div className='flex'>
-    <Layout>
-      <Sidebar/>
-      <div className='flex flex-col w-full'>
-        {/* <Header style={{ padding: 0, background: colorBgContainer }} /> */}
-        <Content style={{ margin: '24px 16px 0' }}>
-          <div style={{ padding: 24, background: colorBgContainer }}>
-          <Form
-              {...formItemLayout}
-              layout={formLayout}
-              form={form}
-              className='flex w-full'
+    <div className="flex">
+      <Layout>
+        <Sidebar />
+        <div className="flex flex-col w-full">
+          {/* <Header style={{ padding: 0, background: colorBgContainer }} /> */}
+          <Content style={{ margin: '24px 16px 0' }}>
+            <div style={{ padding: 24, background: colorBgContainer }}>
+              <Card title="Application" className="w-2/3" bordered={false}>
+                <Form
+                  {...formItemLayout}
+                  form={form}
+                  className="flex flex-col "
+                >
+                  <Form.Item label="App Name">
+                    <Input
+                      name="appName"
+                      required
+                      placeholder="Application name"
+                      onChange={(e) => {
+                        setAppName(e.target.value);
+                      }}
+                    />
+                  </Form.Item>
+                  <Form.Item label="Description:">
+                    <Input
+                      name="description"
+                      required
+                      placeholder="Some thing..."
+                      onChange={(e) => {
+                        setDescription(e.target.value);
+                      }}
+                    />
+                  </Form.Item>
+                  <Form.Item label="Image">
+                    <Input
+                      required
+                      name="icon"
+                      type="file"
+                      placeholder="icon img"
+                      onChange={(e) => {
+                        setImageUpload(e.target.files?.[0] || null);
+                      }}
+                    />
+                  </Form.Item>
+                  <Form.Item {...buttonItemLayout}>
+                    <Button onClick={createApp} type="default">
+                      Submit
+                    </Button>
+                  </Form.Item>
+                </Form>
+              </Card>
+            </div>
+            <div
+              style={{
+                padding: 24,
+                minHeight: 360,
+                background: colorBgContainer,
+              }}
             >
-              <Form.Item label="App Name">
-                <Input 
-                name='appName'
-                required
-                placeholder="Application name"  
-                onChange={(e)=>{setAppName(e.target.value)}}/>
-              </Form.Item>
-              <Form.Item label="Description">
-                <Input 
-                name='description'
-                required
-                placeholder="Some thing..." 
-                onChange={(e) => {setDescription(e.target.value);}}/>
-              </Form.Item>
-              <Form.Item label="Image">
-                <Input 
-                required
-                name='icon'
-                type='file' 
-                placeholder="icon img" 
-                onChange={(e) => {setImageUpload(e.target.files?.[0] || null);}} />
-              </Form.Item>
-              <Form.Item {...buttonItemLayout}>
-                <Button onClick={createApp} type="default">Submit</Button>
-              </Form.Item>
-            </Form>
-          </div>
-          {/* <div style={{ padding: 24, minHeight: 360, background: colorBgContainer }}>
-            <Table columns={columns}/>
-          </div> */}
-        </Content>
-        <Footer/>
-      </div>
+              <Card title="Created Apps" className="w-2/3">
+                <Table/>
+              </Card>
+            </div>
+          </Content>
+          <Footer />
+        </div>
       </Layout>
-  </div>
+    </div>
   );
 };
 

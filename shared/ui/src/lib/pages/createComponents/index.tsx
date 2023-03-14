@@ -1,31 +1,29 @@
 import React from 'react';
-import { doc, setDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
 import { useState } from 'react';
 import { dbfire } from '../../config/firebase';
 import Sidebar from '../../component/sidebar';
 import { useCookies } from 'react-cookie';
-import { Layout, Input, Button, Form, theme, Select, Space } from 'antd';
+import { Layout, Input, Button, Form, theme, Select, Space, Card } from 'antd';
 import Footer from '../../component/footer';
 import { PlusSquareOutlined } from '@ant-design/icons';
 
 const CreateComponents = () => {
-  const [formName, setFormName] = useState('');
-  const [description, setDescription] = useState('');
-  const [formKey, setFormKey] = useState('');
+  const [inputLabel, setinputLabel] = useState('');
+  const [inputType, setinputType] = useState('');
+  const [inputKey, setinputKey] = useState('');
   const [cookies] = useCookies();
-  const [formList, setFormList] = useState([
-    { formName: '', formKey: '', Description: '' },
-  ]);
+  const [formList, setFormList] = useState([{ inputLabel: '', inputType: '' }]);
   const {
     token: { colorBgContainer },
   } = theme.useToken();
 
-  const key = cookies['user'];
+  const key = cookies['formKey'];
 
   const formDetails = {
-    formName: formName,
-    formKey: formKey,
-    description: description,
+    inputLabel: inputLabel,
+    inputType: inputType,
+    formKey:key
   };
 
   const [form] = Form.useForm();
@@ -40,12 +38,13 @@ const CreateComponents = () => {
 
   const buttonItemLayout =
     formLayout === 'inline' ? { wrapperCol: { span: 14, offset: 4 } } : null;
-
+  const colRef = collection(dbfire,'attributes')
   const { Content } = Layout;
   const createForm = async (event: any) => {
     event.preventDefault();
     try {
-      await setDoc(doc(dbfire, 'form', key), formDetails).then(() => {
+      await addDoc(colRef, formDetails)
+      .then(() => {
         console.log('created');
       });
     } catch (error) {
@@ -54,12 +53,13 @@ const CreateComponents = () => {
   };
 
   const handleFormAdd = () => {
-    setFormList([...formList, { formName: '', formKey: '', Description: '' }]);
+    setFormList([...formList, { inputLabel: '', inputType: '' }]);
   };
 
-  const handleChange = (value:string) => {
-        console.log(`selected ${value}`)
-  }
+  const handleChange = (value: string) => {
+    setinputType(value);
+    console.log(`selected ${value}`);
+  };
 
   return (
     <div className="flex">
@@ -69,56 +69,67 @@ const CreateComponents = () => {
           {/* <Header style={{ padding: 0, background: colorBgContainer }} /> */}
           <Content style={{ margin: '24px 16px 0' }}>
             <div style={{ padding: 24, background: colorBgContainer }}>
-              <Button
-                onClick={handleFormAdd}
-                type="dashed"
-                className="float-right mb-6"
-              >
-                <PlusSquareOutlined />
-                <span>add</span>
-              </Button>
-              {formList.map((formData, index) => (
-                <Form
-                  {...formItemLayout}
-                  layout={formLayout}
-                  form={form}
-                  className="flex w-full mb-6"
-                  key={index}
+              <Card title="Attributes" className="w-2/3" bordered={false}>
+                <Button
+                  onClick={handleFormAdd}
+                  type="dashed"
+                  className="float-right mb-6"
                 >
-                  <Form.Item label='Input Label'>
-                    <Input
-                      name="formName"
-                      required
-                      placeholder="label:"
-                      onChange={(e) => {
-                        setFormName(e.target.value);
-                      }}
-                    />
-                  </Form.Item>
-                  <Form.Item label='Input type'>
-                    <Select
-                      placeholder="input types"
-                      style={{ width: 120 }}
-                      onChange={handleChange}
-                      options={[
-                        { value: 'text', label: 'text' },
-                        { value: 'select', label: 'select' },
-                        { value: 'checkbox', label: 'checkbox' },
-                        { value: 'select', label: 'select' },
-                      ]}
-                    />
-                  </Form.Item>
-                  <Form.Item {...buttonItemLayout}>
-                    <Button onClick={createForm} type="default">
-                      Create
-                    </Button>
-                  </Form.Item>
-                </Form>
-              ))}
+                  <PlusSquareOutlined />
+                  <span>add</span>
+                </Button>
+                {formList.map((formData, index) => (
+                  <Form
+                    {...formItemLayout}
+                    layout={formLayout}
+                    form={form}
+                    className="flex w-full mb-6"
+                    key={index}
+                  >
+                    <Form.Item label="Input Label">
+                      <Input
+                        name="inputLabel"
+                        required
+                        placeholder="label:"
+                        onChange={(e) => {
+                          setinputLabel(e.target.value);
+                        }}
+                      />
+                    </Form.Item>
+                    <Form.Item label="Input type">
+                      <Select
+                        placeholder="input types"
+                        aria-required
+                        style={{ width: 120 }}
+                        onChange={handleChange}
+                        options={[
+                          { name: 'text', value: 'text', label: 'text' },
+                          { name: 'select', value: 'select', label: 'select' },
+                          { name: 'checkbox', value: 'checkbox', label: 'checkbox'},
+                          { name: 'data', value: 'date', label: 'date' },
+                        ]}
+                      />
+                    </Form.Item>
+                    <Form.Item {...buttonItemLayout}>
+                      <Button onClick={createForm} type="default">
+                        Create
+                      </Button>
+                    </Form.Item>
+                  </Form>
+                ))}
+              </Card>
             </div>
-            {/* <div style={{ padding: 24, minHeight: 360, background: colorBgContainer }}>
-            <Table columns={columns}/>
-          </div> */}
+            <div
+              style={{
+                padding: 24,
+                minHeight: 360,
+                background: colorBgContainer,
+              }}
+            >
+              <Card title="Content" className="w-2/3" bordered={false}>
+
+              </Card>
+            </div>
           </Content>
           <Footer />
         </div>
