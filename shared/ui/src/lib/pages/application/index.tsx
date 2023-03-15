@@ -30,7 +30,7 @@ const Application = () => {
   const [description, setDescription] = useState('');
   const [imageUpload, setImageUpload] = useState<File | null>(null);
   const [imageUrs, setImageUrls] = useState<any[]>([]);
-  const [cookies] = useCookies();
+  const [cookies,setCookies] = useCookies();
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -59,13 +59,15 @@ const Application = () => {
 
   const createApp = async () => {
     try {
-      await addDoc(colRef, appDetails).then(() => {
-        <Alert
-          className="flex"
-          message="App Created"
-          type="success"
-          showIcon
-        />;
+      await addDoc(colRef, appDetails).then(function(docRef){
+        console.log(docRef.id)
+        setCookies('docRef',docRef.id)
+        // <Alert
+        //   className="flex"
+        //   message="App Created"
+        //   type="success"
+        //   showIcon
+        // />;
       });
       if (imageUpload == null) return;
       const imageRef = ref(
@@ -78,7 +80,6 @@ const Application = () => {
         });
         console.log('uploaded');
       });
-      navigate('/application/applicationForm');
     } catch (error) {
       console.log(error);
     }

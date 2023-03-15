@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createElement } from 'react';
 import { addDoc, collection, doc, setDoc } from 'firebase/firestore';
 import { useState } from 'react';
 import { dbfire } from '../../config/firebase';
@@ -7,6 +7,7 @@ import { useCookies } from 'react-cookie';
 import { Layout, Input, Button, Form, theme, Select, Space, Card } from 'antd';
 import Footer from '../../component/footer';
 import { PlusSquareOutlined } from '@ant-design/icons';
+import { data } from '../../data/json-form';
 
 const CreateComponents = () => {
   const [inputLabel, setinputLabel] = useState('');
@@ -50,6 +51,7 @@ const CreateComponents = () => {
     } catch (error) {
       console.log(error);
     }
+    handleCreate();
   };
 
   const handleFormAdd = () => {
@@ -59,8 +61,17 @@ const CreateComponents = () => {
   const handleChange = (value: string) => {
     setinputType(value);
     console.log(`selected ${value}`);
+    
   };
-
+  const handleCreate = ()=>{
+    if(inputType == data.TEXT){
+      return (
+        createElement('h1',{className:'border'},`"zxcvzxcv"${inputLabel}`),
+        createElement('input',{className:'border',placeholder:`${inputLabel}`}))
+    }else if(inputType == data.CHECKBOX){
+      return (createElement('input',{type:'checkbox'}))
+      }
+  }
   return (
     <div className="flex">
       <Layout>
@@ -114,6 +125,10 @@ const CreateComponents = () => {
                       <Button onClick={createForm} type="default">
                         Create
                       </Button>
+                      {/* <Button onClick={handleCreate} type="default">
+                        Create form
+                      </Button> */}
+
                     </Form.Item>
                   </Form>
                 ))}
@@ -127,7 +142,7 @@ const CreateComponents = () => {
               }}
             >
               <Card title="Content" className="w-2/3" bordered={false}>
-
+                  {handleCreate()}
               </Card>
             </div>
           </Content>

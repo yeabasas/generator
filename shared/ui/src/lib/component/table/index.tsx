@@ -13,15 +13,14 @@ const Table = ()=>{
   const [cookies]=useCookies()
   const [posts,setPosts]=useState<[]>([])
   const userId = cookies['user']
-  const colRef = collection(dbfire,'application form')
-  const q = query(colRef)
+  const colRef = collection(dbfire,'application form');
+  const q = query(colRef,where('userId','==',userId))
   useEffect(()=>{
     const display = onSnapshot(q,(querySnapshot)=>{
       const items: any=[] ;
-      items.push(where('user','==',userId))
-      // querySnapshot.forEach((doc)=>{
-      //   items.push(where((doc.data()))
-      // });
+      querySnapshot.forEach((doc)=>{
+        items.push(doc.data())
+      });
       setPosts(items)
     })
     return ()=>{
@@ -31,19 +30,18 @@ const Table = ()=>{
   return(
     <>
       <table className="w-full">
-        <thead>
+        <thead className="bg-gray-100 rounded">
           <tr>
-            <th className="border">App Name</th>
-            <th className="border">Description</th>
-            {/* <th></th> */}
+            <th>App Name</th>
+            <th>Description</th>
           </tr>
         </thead>
         <tbody className="mx-auto">
           {posts.map((post:any, index)=>(
-            <tr key={index} className="">
-              <td className="border ">{post.name}</td>
-              <td className="border ">{post.description}</td>
-              <td><Link to='/application/applicationform'><button className="border">Details</button></Link> </td>
+            <tr key={index} className="border border-x-0">
+              <td>{post.name}</td>
+              <td>{post.description}</td>
+              <td><Link to='/application/applicationform'><button className="bg-gray-200 p-1 rounded">Details</button></Link> </td>
             </tr>
           ))}
         </tbody>

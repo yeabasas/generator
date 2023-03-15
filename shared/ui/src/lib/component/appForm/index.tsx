@@ -16,13 +16,14 @@ const AppForm = () => {
   const {token: { colorBgContainer },} = theme.useToken();
   const navigate = useNavigate();
   
-  const key = cookies['user'];
-
+  const userId = cookies['user'];
+  const appRef = cookies['docRef']
   const formDetails = {
     formName: formName,
     formKey: formKey,
     description: description,
-    userId:key
+    appRef:appRef,
+    userId:userId
   };
 
 
@@ -44,7 +45,7 @@ const AppForm = () => {
     try {
       await addDoc(colRef, formDetails)
       .then(() => {
-        setCookies('formKey', formKey,{path:'/application/applicationform'})
+        setCookies('formKey', formKey)
         console.log('created');
         navigate('/application/applicationform/createComponents')
       });
@@ -60,7 +61,7 @@ const AppForm = () => {
         {/* <Header style={{ padding: 0, background: colorBgContainer }} /> */}
         <Content style={{ margin: '24px 16px 0' }}>
           <div style={{ padding: 24, background: colorBgContainer }}>
-          <Card title="Application" className="w-2/3" bordered={false}>
+          <Card title="Form" className="w-2/3" bordered={false}>
               <Form
                   {...formItemLayout}
                   layout={formLayout}
