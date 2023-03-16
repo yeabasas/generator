@@ -10,8 +10,8 @@ import { PlusSquareOutlined } from '@ant-design/icons';
 import { data } from '../../data/json-form';
 
 const CreateComponents = () => {
-  const [inputLabel, setinputLabel] = useState('');
-  const [inputType, setinputType] = useState('');
+  const [inputLabel, setInputLabel] = useState('');
+  const [inputType, setInputType] = useState('');
   const [inputKey, setinputKey] = useState('');
   const [cookies] = useCookies();
   const [formList, setFormList] = useState([{ inputLabel: '', inputType: '' }]);
@@ -43,35 +43,56 @@ const CreateComponents = () => {
   const { Content } = Layout;
   const createForm = async (event: any) => {
     event.preventDefault();
-    try {
-      await addDoc(colRef, formDetails)
-      .then(() => {
-        console.log('created');
-      });
-    } catch (error) {
-      console.log(error);
-    }
-    handleCreate();
+    // create()
+    // try {
+    //   await addDoc(colRef, formDetails)
+    //   .then(() => {
+    //     console.log('created');
+    //   });
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   const handleFormAdd = () => {
     setFormList([...formList, { inputLabel: '', inputType: '' }]);
   };
 
-  const handleChange = (value: string) => {
-    setinputType(value);
-    console.log(`selected ${value}`);
-    
-  };
+  
+  function handleLabel(){
+    return createElement('label',null,`${inputLabel}`)
+  }
   const handleCreate = ()=>{
     if(inputType == data.TEXT){
-      return (
-        createElement('h1',{className:'border'},`"zxcvzxcv"${inputLabel}`),
-        createElement('input',{className:'border',placeholder:`${inputLabel}`}))
+      return createElement('input',{type:'text',className:'border'})
     }else if(inputType == data.CHECKBOX){
-      return (createElement('input',{type:'checkbox'}))
-      }
-  }
+      return createElement('input',{type:'checkbox'},)
+    }
+    else if(inputType == data.DATE){
+      return createElement('input',{type:'date'},)
+    }
+    // else if(inputType == data.SELECT){
+      //    return createElement('select',{},
+      //    createElement('option',{onchange:handleChange},
+      //     createElement('input',{type:'text',style:{padding:'10'}})
+      //     )
+      //     )
+      //   }
+    };
+    const handleChange = (e: { target: { options: any; value:any;}; },index: string | number) => {
+      const {options,value}=e.target
+      const list= [...formList]
+      list[index][options] = e.target.value
+      setInputType(list);
+      console.log(`selected ${value}`);
+      
+    };
+    const handleInputChange = (e: { target: { name: any; value: any; }; }, index: string | number) => {
+      const { name, value } = e.target;
+      const list = [...formList];
+      list[index][name] = value;
+      setFormList(list);
+    };
   return (
     <div className="flex">
       <Layout>
@@ -102,27 +123,29 @@ const CreateComponents = () => {
                         name="inputLabel"
                         required
                         placeholder="label:"
-                        onChange={(e) => {
-                          setinputLabel(e.target.value);
-                        }}
+                        value={formData.inputLabel}
+                        onChange={(e)=>handleInputChange(e,index)}
                       />
                     </Form.Item>
                     <Form.Item label="Input type">
                       <Select
                         placeholder="input types"
                         aria-required
+                        // value={formData.inputType}
                         style={{ width: 120 }}
                         onChange={handleChange}
                         options={[
-                          { name: 'text', value: 'text', label: 'text' },
-                          { name: 'select', value: 'select', label: 'select' },
-                          { name: 'checkbox', value: 'checkbox', label: 'checkbox'},
-                          { name: 'data', value: 'date', label: 'date' },
+                          { name: 'text', value: '1', label: 'text' },
+                          { name: 'select', value: '2', label: 'select' },
+                          { name: 'checkbox', value: '3', label: 'checkbox'},
+                          { name: 'date', value: '4', label: 'date' },
                         ]}
                       />
                     </Form.Item>
                     <Form.Item {...buttonItemLayout}>
-                      <Button onClick={createForm} type="default">
+                      <Button onClick={()=>{
+                        // handleLabel
+                        handleCreate;}} type="default">
                         Create
                       </Button>
                       {/* <Button onClick={handleCreate} type="default">
@@ -142,7 +165,19 @@ const CreateComponents = () => {
               }}
             >
               <Card title="Content" className="w-2/3" bordered={false}>
-                  {handleCreate()}
+                
+                <div className='flex flex-col gap-2'>
+                  {/* {handleLabel()}
+                  {handleCreate()} */}
+                  {formList && formList.map((list,index)=>(
+                    <ul key={index}>
+                      {list.inputLabel && <li>{list.inputLabel}</li>}
+                      {list.inputType && <li>{list.inputType}</li>}
+                    </ul>
+                  ))}
+                </div>
+               
+                
               </Card>
             </div>
           </Content>
