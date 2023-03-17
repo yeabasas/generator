@@ -31,14 +31,14 @@ const Table = ()=>{
     <>
       <table className="w-full">
         <thead className="bg-gray-100 rounded">
-          <tr>
-            <th>App Name</th>
-            <th>Description</th>
+          <tr className="p-4">
+            <th className="p-4">App Name</th>
+            <th className="p-4">Description</th>
           </tr>
         </thead>
         <tbody className="mx-auto">
           {posts.map((post:any, index)=>(
-            <tr key={index} className="border border-x-0">
+            <tr key={index} className="border border-x-0 border-">
               <td>{post.name}</td>
               <td>{post.description}</td>
               <td><Link to='/application/applicationform'><button className="bg-gray-200 p-1 rounded">Details</button></Link> </td>

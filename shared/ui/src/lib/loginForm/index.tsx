@@ -15,31 +15,28 @@ const Container = styled.div({})
 const FormContainer = styled.div({})
 
 const Title = styled.p({
-  color: '#ffffff',
   fontWeight: 800,
   paddingBottom: '50px',
   fontSize: '44px'
 })
 
 const CreateText = styled.p({
-  color: '#ffffff',
+  
   fontWeight: 800,
   fontSize: '15px',
   width: '100%',
   display: 'flex',
-  justifyContent: 'flex-start',
+  justifyContent: 'center',
   padding: '10px 0',
   flexWrap: 'wrap'
 });
 
 const AccountText = styled.span({
-  color: '#ffffff',
   fontWeight: 800,
   fontSize: '15px'
 })
 
 const CreateAccountText = styled.span({
-  color: '#8c8c8f',
   fontWeight: 800,
   fontSize: '15px',
   paddingLeft: '5px',
@@ -113,8 +110,8 @@ const LoginFormComponent = () => {
   return (
     <Container className="h-screen flex justify-center bg-wave bg-no-repeat bg-cover">
       <FormContainer className='m-auto w-1/4'>
-        <CustomForm className='flex flex-col gap-2 justify-center rounded-2xl text-white bg-blue-900/75 p-9' onSubmit={handleSubmit(onSubmit)}>
-        <Title className='m-auto text-2xl font-semibold pb-9'>Sign in</Title>
+      <CustomForm className='flex flex-col gap-2 justify-center rounded-2xl text-blue-100 bg-blue-200/75 p-9' onSubmit={handleSubmit(onSubmit)}>
+        <Title className='m-auto text-2xl font-semibold pb-9 text-blue-600'>Sign in</Title>
       <InputField
           type='text'
           name='email'
@@ -139,8 +136,8 @@ const LoginFormComponent = () => {
             message={btnDetails.message}
           />
         <CreateText className='mx-auto'>
-          <AccountText>New here ?</AccountText>
-          <CreateAccountText className='text-blue-900 hover:text-blue-400' onClick={() => navigate(routeName.REGISTRATION)}>Create Account</CreateAccountText>
+          <AccountText className='text-blue-700'>New here ?</AccountText>
+          <CreateAccountText className='text-blue-700 hover:text-blue-400' onClick={() => navigate(routeName.REGISTRATION)}>Create Account</CreateAccountText>
         </CreateText>
           </CustomForm>
         </FormContainer>

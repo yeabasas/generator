@@ -13,7 +13,7 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage:{
-        'wave':"url( '/assets/images/bg-blue-wavey-dark.jpg' )",
+        'wave':"url( '/assets/images/elegant-blue-flowing-wave-background.jpg' )",
       }
     },
   },
