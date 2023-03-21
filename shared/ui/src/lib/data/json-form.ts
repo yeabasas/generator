@@ -8,5 +8,6 @@ export enum data {
 }
 
 export const labels={
-    LABEL: /^[a-zA-Z][0-9a-zA-Z]$/i
+    LABEL: /^[_a-zA-Z][_a-zA-Z0-9]{0,30}$/i,
+    KEY: /^[a-zA-Z][a-zA-Z0-9]{0,8}$/i
 }

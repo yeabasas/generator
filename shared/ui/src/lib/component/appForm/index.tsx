@@ -1,105 +1,190 @@
-import { addDoc, collection} from 'firebase/firestore';
+import { addDoc, collection } from 'firebase/firestore';
 import { useState } from 'react';
 import { dbfire } from '../../config/firebase';
-import Sidebar from '../sidebar';
 import { useCookies } from 'react-cookie';
-import { Layout, Input, Button, Form, theme, Card } from 'antd';
-import Footer from '../footer';
+import { Select, Input, Button, Form, theme, Card } from 'antd';
 import { useNavigate } from 'react-router-dom';
-
+import { labels } from '../../data/json-form';
 const AppForm = () => {
   const [formName, setFormName] = useState('');
   const [description, setDescription] = useState('');
   const [formKey, setFormKey] = useState('');
-  const [cookies,setCookies] = useCookies();
-  const [formList,setFormList]=useState([{ formName:"",formKey:"",Description:""}])
-  const {token: { colorBgContainer },} = theme.useToken();
+  const [inputLabel, setInputLabel] = useState('');
+  const [inputType, setInputType] = useState('');
+  const [inputKey, setInputKey] = useState('');
+  const [cookies, setCookies] = useCookies();
+  const [formList, setFormList] = useState([{ formName: "", formKey: "", Description: "" }])
+  const { token: { colorBgContainer }, } = theme.useToken();
   const navigate = useNavigate();
-  
+  const attributeDetails = { inputLabel: inputLabel, inputType: inputType, inputKey: inputKey };
+  const handleInputChange = (e: { target: { name: string; value: string; }; }, index: string | number) => {
+    const { name, value } = e.target;
+    const lists = [...attributeList];
+    lists[index][name] = value;
+    console.log(lists)
+    setAttributeList(lists);
+  };
   const userId = cookies['user'];
   const appRef = cookies['docRef']
+  const [attributeList, setAttributeList] = useState([{ inputLabel: '', inputType: "", inputKey: "" }]);
+
   const formDetails = {
     formName: formName,
     formKey: formKey,
     description: description,
-    appRef:appRef,
-    userId:userId
+    appRef: appRef,
+    userId: userId,
+    attribute: attributeList
   };
 
+  const colRef = collection(dbfire, 'form');
+  const createForm = async (event: any) => {
+    event.preventDefault();
+    try {
+      await addDoc(colRef, formDetails)
+        .then(() => {
+          setCookies('formKey', formKey)
+          console.log('created');
+          // navigate('/application/applicationform/createComponents')
+        });
+    } catch (error) {
+      console.log(error)
+    }
+  };
+  
 
   const [form] = Form.useForm();
   const [formLayout, setFormLayout] = useState<LayoutType>('horizontal');
 
   type LayoutType = Parameters<typeof Form>[0]['layout'];
 
-  const formItemLayout =
-  formLayout === 'horizontal' ? { labelCol: { span: 3 }, wrapperCol: { span: 14 } } : null;
+  const formItemLayout = formLayout === 'horizontal' ? { labelCol: { span: 3 }, wrapperCol: { span: 14 } } : null;
+  const buttonItemLayout = formLayout === 'horizontal' ? { wrapperCol: { span: 14, offset: 4 } } : null;
 
-  const buttonItemLayout =
-  formLayout === 'horizontal' ? { wrapperCol: { span: 14, offset: 4 } } : null;
+  const attributeItemLayout = formLayout === 'inline' ? { labelCol: { span: 13 }, wrapperCol: { span: 10 } } : null;
+  const attributeButtonItemLayout = formLayout === 'inline' ? { wrapperCol: { span: 4, offset: 10 } } : null;
 
-  const { Content } = Layout;
-  const colRef = collection(dbfire, 'form');
-  const createForm = async (event:any) => {
-    event.preventDefault();
-    try {
-      await addDoc(colRef, formDetails)
-      .then(() => {
-        setCookies('formKey', formKey)
-        console.log('created');
-        navigate('/application/applicationform/createComponents')
-      });
-    } catch (error) {
-      console.log(error)
-    }
+ 
+
+  
+  const handleInputChangee = (e: { value: { value: any; }; }, index: string | number) => {
+    let value
+    const list = [...formList];
+    list[index][value] = e.value;
+    console.log(setFormList(list));
   };
+
+  const handleFormDuplicate = () => {
+    setAttributeList([...attributeList, { inputLabel: '', inputType: "", inputKey: '' }]);
+  };
+
+  const handleFormAdd = () => {
+    console.log("form added")
+  }
+  let lastValue = "";
+  function onInput(e: any) {
+    const currentValue = e.target.value;
+    if (!currentValue.match(labels.KEY))
+      e.target.value = lastValue;
+    else
+      lastValue = currentValue;
+  }
+  /*--------------return---------------------------------- */
+
   return (
-    <div className='flex'>
-    <Layout>
-      <Sidebar/>
-      <div className='flex flex-col w-full'>
-        {/* <Header style={{ padding: 0, background: colorBgContainer }} /> */}
-        <Content style={{ margin: '24px 16px 0' }}>
-          <div style={{ padding: 24, background: colorBgContainer }}>
-          <Card title="Form" className="w-2/3" bordered={false}>
-              <Form
-                  {...formItemLayout}
-                  layout={formLayout}
-                  form={form}
-                  className='flex flex-col'
-                >
-                  <Form.Item label="Form Name">
-                    <Input 
-                    name='formName'
-                    required
-                    placeholder="Form name"  
-                    onChange={(e)=>{setFormName(e.target.value)}}/>
-                  </Form.Item>
-                  <Form.Item label="Key">
-                    <Input 
-                    required
-                    name='formKey'
-                    placeholder="Key" 
-                    onChange={(e) => {setFormKey(e.target.value);}} />
-                  </Form.Item>
-                  <Form.Item label="Description">
-                    <Input 
-                    name='description'
-                    required
-                    placeholder="Some thing..." 
-                    onChange={(e) => {setDescription(e.target.value);}}/>
-                  </Form.Item>
-                  <Form.Item {...buttonItemLayout}>
-                    <Button onClick={createForm} type="default">Submit</Button>
-                  </Form.Item>
-                </Form>
-            </Card>
-          </div>
-        </Content>
-        <Footer/>
-      </div>
-      </Layout>
-  </div>
+    <Card title="create" className="w-full mb-4" bordered={false}>
+      <Card title="Form" className="w-2/3 mb-4" bordered={true}>
+        <Form
+          {...formItemLayout}
+          layout={formLayout}
+          form={form}
+          className='flex flex-col'
+        >
+          <Form.Item label="Form Name">
+            <Input
+              name='formName'
+              required
+              placeholder="Form name"
+              value={formName}
+              onChange={(e) => setFormName(e.target.value)} />
+          </Form.Item>
+          <Form.Item label="Key">
+            <Input
+              required
+              name='formKey'
+              placeholder="Key"
+              onChange={(e) => { setFormKey(e.target.value); }} />
+          </Form.Item>
+          <Form.Item label="Description">
+            <Input
+              name='description'
+              required
+              placeholder="Some thing..."
+              onChange={(e) => { setDescription(e.target.value); }} />
+          </Form.Item>
+        </Form>
+      </Card>
+      <Card title="Attributes" className="w-2/3 mb-4" bordered={true}>
+        <div className='flex justify-end mr-6'>
+          <Button
+            onClick={handleFormDuplicate}
+            type="dashed"
+            className="float-right w-fit mb-2"
+          >
+            {/* <PlusSquareOutlined /> */}
+            <span>add</span>
+          </Button>
+        </div>
+        {attributeList.map((formData, index) => (
+          <Form
+            {...attributeItemLayout}
+            layout={formLayout}
+            form={form}
+            key={index}
+            className="grid grid-cols-3 border-b-2 gap-2 mb-2 "
+          >
+            <Form.Item label="InputLabel">
+              <Input
+                name="inputLabel"
+                required
+                placeholder="label:"
+                // onInput={(e)=>onInput(e)}
+                onChange={(e) => handleInputChange(e, index)}
+              />
+            </Form.Item>
+            <Form.Item label="InputKey">
+              <Input
+                name="inputKey"
+                required
+                placeholder="Key"
+                onInput={(e) => onInput(e)}
+                onChange={(e) => handleInputChange(e, index)}
+              />
+            </Form.Item>
+            <Form.Item label="Input type">
+              <Select
+                placeholder="input types"
+                aria-required
+                // value={formData.inputType}
+                style={{ width: 100 }}
+                onChange={(e) => handleInputChangee(e, index)}
+                options={[
+                  { name: 'text', value: 'text', label: 'text' },
+                  { name: 'select', value: 'select', label: 'select' },
+                  { name: 'checkbox', value: 'checkbox', label: 'checkbox' },
+                  { name: 'date', value: 'date', label: 'date' },
+                ]}
+              />
+            </Form.Item>
+          </Form>
+        ))}
+
+      </Card>
+      <Form.Item {...buttonItemLayout}>
+        <Button onClick={createForm} type="default">Submit</Button>
+      </Form.Item>
+    </Card>
+
   );
 };
 

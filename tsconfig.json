@@ -20,6 +20,7 @@
     "allowSyntheticDefaultImports": true,
     "noPropertyAccessFromIndexSignature": false,
     "resolveJsonModule": true,
+    "noImplicitAny": true,
     "strict": true,
     "types": ["vite/client", "vitest"],
     "paths": {

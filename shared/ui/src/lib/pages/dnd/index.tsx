@@ -1,46 +1,151 @@
+// import React, { Component } from 'react'
+// import { WritableOptions } from 'stream'
+
+// // eslint-disable-next-line @typescript-eslint/ban-types
+// export class Dnd extends Component<{value:string},{}> {
+//   constructor()
+//   {
+//     super(this.props)
+//     this.state = {
+//       inputValue:'',
+//       empList:[
+//         {
+//           empNames:'--select--'
+//         }
+//       ]
+//     }
+//   }
+//   txtEmp=(e: { target: { value: any } })=>{
+//     this.setState({inputValue:e.target.value})
+//   }
+//   override render() {
+//     return (
+//       <div className='flex flex-col w-1/4 gap-4'>
+
+//       <input type="text" placeholder='enter' className='border'
+//       onChange={this.txtEmp}
+//       value={this.state.inputValue} />
+//       <button className='border'>add</button>
+//       <select className='border'>
+//         {empRecord}
+//       </select>
+//     </div>
+//     )
+//   }
+// }
+
+// export default Dnd
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
-import React, { useState } from 'react';
+import React, { useState,useRef } from 'react';
 import { DndContext } from '@dnd-kit/core';
 
 import { Droppable } from '../../component/dropable';
 import { Draggable } from '../../component/draggable';
-
+import Input from '../Input'
 function Dnd() {
-  const containers = ['A', 'B', 'C'];
-  const [parent, setParent] = useState(null);
-  const draggableMarkup = (
-    <div className='flex border-2 w-1/2'>
-      <Draggable id="text" type='text'>Text</Draggable>
-      {/* <Draggable id="checkbox">checkbox</Draggable> */}
-    </div>
-  );
+    const [formValues, setFormValues] = useState([
+      {
+        label: "Name",
+        type: "text",
+        value: "",
+      },
+    ]);
+    const [toggle,setToggle] =useState(false)
 
-  return (
-      <DndContext onDragEnd={handleDragEnd}>
-        {parent === null ? draggableMarkup : null}
+    const inputRef = useRef()
+    const selectRef = useRef()
 
-        {containers.map((type) => (
-            // We updated the Droppable component so it would accept an `id`
-            // prop and pass it to `useDroppable`
-        <div className='p- m-4 border-2 w-1/2'>
-            <Droppable key={type} id={type}>
-            {parent === type ? draggableMarkup : 'Drop here'}
-            </Droppable>
-        </div>
-        ))}
-        </DndContext>
+    const handleChange = (e: { target: { value: string; }; }, index: string | number) => {
+      const values = [...formValues];
+      values[index].value = e.target.value;
+      setFormValues(values);
+    };
 
-  );
-
-  function handleDragEnd(event: any) {
-    const { active,over } = event;
-
-    // If the item is dropped over a container, set it as the parent
-    // otherwise reset the parent to `null`
-    // if (over && over.data.current.accepts.includes(active.data.current.type)) {
-        // do stuff
-        setParent(over ? over.type : null);
-    //   }
+    const handleAddField = (e:any) => {
+      e.preventDefault();
+      const values = [...formValues];
+      // values.push({
+      //   // label: inputRef.current.value || "label",
+      //   // type: selectRef.current.value || "text",
+      //   // value: "",
+      // });
+      setFormValues(values);
+      setToggle(false);
+    };
+  
+    const addBtnClick = (e: { preventDefault: () => void; }) => {
+      e.preventDefault();
+      setToggle(true);
+    };
+    return (
+      <div className="App">
+        <form>
+          {formValues.map((obj, index) => (
+            <Input
+              key={index}
+              objValue={obj}
+              onChange={handleChange}
+              index={index}
+            />
+          ))}
+          <button type="submit" className="submit-btn">
+            Submit
+          </button>
+        </form>
+      </div>
+    );
   }
-}
 export default Dnd;
+
