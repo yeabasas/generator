@@ -5,13 +5,13 @@ import { getFirestore } from '@firebase/firestore'
 import { getStorage } from "firebase/storage";
 //PUT Credential Details here
 const CredDetails = {
-  APIKEY: 'AIzaSyCfi-3ISbK82ZI4jk5keCHg7hnxCRU1rGs',
-  AUTHDOMAIN: 'designer-aca93.firebaseapp.com',
-  DATABASEURL:'https://designer-aca93-default-rtdb.firebaseio.com',
-  PROJECTID: 'designer-aca93',
-  STORAGEBUCKET: 'designer-aca93.appspot.com',
-  MESSAGESENDERID: '210938589225',
-  APPID: '1:210938589225:web:446a73ddd3997c19deec38'
+  APIKEY: 'AIzaSyC6YT7XJ2xgOAznaP7XSpB0Qm5CiNxrnok',
+  AUTHDOMAIN: 'generator-424d9.firebaseapp.com',
+  DATABASEURL:'https://generator-424d9-default-rtdb.asia-southeast1.firebasedatabase.app',
+  PROJECTID: 'generator-424d9',
+  STORAGEBUCKET: 'generator-424d9.appspot.com',
+  MESSAGESENDERID: '366432278564',
+  APPID: '1:366432278564:web:f8fcdfcc1eee13f959a0b1'
 }
 
 const firebaseConfig = {

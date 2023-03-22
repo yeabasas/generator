@@ -93,7 +93,6 @@ import { DndContext } from '@dnd-kit/core';
 
 import { Droppable } from '../../component/dropable';
 import { Draggable } from '../../component/draggable';
-import Input from '../Input'
 function Dnd() {
     const [formValues, setFormValues] = useState([
       {
@@ -132,14 +131,7 @@ function Dnd() {
     return (
       <div className="App">
         <form>
-          {formValues.map((obj, index) => (
-            <Input
-              key={index}
-              objValue={obj}
-              onChange={handleChange}
-              index={index}
-            />
-          ))}
+          
           <button type="submit" className="submit-btn">
             Submit
           </button>

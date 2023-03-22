@@ -79,7 +79,7 @@ const Table = () => {
                 <td>{post.name}</td>
                 <td>{post.description}</td>
                 <td>
-                  <Link to={`${routeName.APPLICATION}/${useContext(AuthContext).currentUser?.uid}${routeName.APPLICATIONFORM}/${key}`}>
+                  <Link to={`${routeName.APPLICATIONFORM}/${key}`}>
                     <button className="bg-gray-200 p-1 rounded">Details</button>
                   </Link>{' '}
                 </td>

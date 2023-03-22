@@ -106,7 +106,7 @@ const items: MenuItem[] = [
         <Menu.Item key='3'>
           <AppstoreOutlined/>
           <span>Application Form</span>
-          <Link to={`${routeName.APPLICATION}/${useContext(AuthContext).currentUser?.uid}${routeName.APPLICATIONFORM}/${key}`}/>
+          <Link to={`${routeName.APPLICATIONFORM}/${key}`}/>
         </Menu.Item>
         </Menu>
         <Menu>

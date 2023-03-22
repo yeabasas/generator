@@ -49,6 +49,7 @@ const Application = () => {
       await addDoc(colRef, appDetails).then(function (docRef) {
         console.log(docRef.id);
         setCookies('docRef', docRef.id);
+        <Table/>
         // <Alert
         //   className="flex"
         //   message="App Created"
