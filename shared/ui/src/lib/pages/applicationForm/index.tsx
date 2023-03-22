@@ -1,8 +1,5 @@
 import AppForm from '../../component/appForm'
-import CreateComponents from '../createComponents'
-import Attributes from '../../component/attributes'
-import { Layout, Card, theme } from 'antd'
-import { Content } from 'antd/es/layout/layout'
+import { Layout, theme } from 'antd'
 import Sidebar from '../../component/sidebar'
 const ApplicationForm = () => {
   const { Content } = Layout;

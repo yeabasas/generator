@@ -4,7 +4,7 @@ export const routeName = {
   LANDING:'/landing',
   DND:'/dnd',
   APPLICATION:'/application',
-  APPLICATIONFORM:'/application/applicationform',
+  APPLICATIONFORM:`/applicationform`,
   CREATECOMPONENTS:'/application/applicationform/createComponents',
   NOTFOUND:'*'
 }
@@ -15,4 +15,3 @@ export const REGEX = {
 };
 
 export const ENABLE_FIREBASE = true
-    

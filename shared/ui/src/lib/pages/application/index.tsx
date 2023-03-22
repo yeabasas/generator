@@ -1,41 +1,28 @@
-import {
-  Layout,
-  theme,
-  Input,
-  Button,
-  Form,
-  Card,
-  Alert,
-} from 'antd';
+import { Layout, theme, Input, Button, Form, Card, Alert } from 'antd';
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
-
 import { dbfire } from '../../config/firebase';
 import Sidebar from '../../component/sidebar';
-import {
-  addDoc,
-  collection,
-} from 'firebase/firestore';
+import { addDoc, collection } from 'firebase/firestore';
 // import Table from '../../component/table';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { v4 } from 'uuid';
 import { storage } from '../../config/firebase';
-import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import Footer from '../../component/footer';
 import Table from '../../component/table';
-
+import { AuthContext } from '../../config/AuthContex';
 const Application = () => {
   const [appName, setAppName] = useState('');
   const [description, setDescription] = useState('');
   const [imageUpload, setImageUpload] = useState<File | null>(null);
   const [imageUrs, setImageUrls] = useState<any[]>([]);
-  const [cookies,setCookies] = useCookies();
+  const [cookies, setCookies] = useCookies();
   const {
     token: { colorBgContainer },
   } = theme.useToken();
-  const navigate = useNavigate();
-  const key = cookies['user'];
+  const { currentUser } = useContext(AuthContext);
+  const key = currentUser?.uid;
 
   const [form] = Form.useForm();
   const [formLayout] = useState<LayoutType>('horizontal');
@@ -56,23 +43,24 @@ const Application = () => {
   const appDetails = { name: appName, description: description, userId: key };
   const colRef = collection(dbfire, 'application form');
   // let q = query(colRef,where('user','==',key))
-
+  
   const createApp = async () => {
     try {
-      await addDoc(colRef, appDetails).then(function(docRef){
-        console.log(docRef.id)
-        setCookies('docRef',docRef.id)
+      await addDoc(colRef, appDetails).then(function (docRef) {
+        console.log(docRef.id);
+        setCookies('docRef', docRef.id);
         // <Alert
         //   className="flex"
         //   message="App Created"
         //   type="success"
         //   showIcon
         // />;
+        
       });
       if (imageUpload == null) return;
       const imageRef = ref(
         storage,
-        `images/${cookies['user']}/${imageUpload.name + v4()}`
+        `images/${currentUser?.uid}/${imageUpload.name + v4()}`
       );
       uploadBytes(imageRef, imageUpload).then((snapshot) => {
         getDownloadURL(snapshot.ref).then((url) => {
@@ -159,7 +147,7 @@ const Application = () => {
               }}
             >
               <Card title="Created Apps" className="w-2/3">
-                <Table/>
+                <Table />
               </Card>
             </div>
           </Content>

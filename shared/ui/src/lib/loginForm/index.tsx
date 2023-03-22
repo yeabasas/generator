@@ -58,14 +58,12 @@ const LoginFormComponent = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
- const [cookies, setCookie, removeCookie] =useCookies()
 
   const loginUserHandler = async (value:any) => {
     try {
       await signInWithEmailAndPassword(app, value.email, value.password)
       .then((userCredential)=>{
         const user = userCredential.user;
-        setCookie('user', user.uid,{ path:'/'})
         if (user) {
           setBtnDetails({
             loader: false,

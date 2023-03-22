@@ -4,16 +4,17 @@ import {
   collection,} from "firebase/firestore";
 import { Layout, theme } from 'antd';
 import Footer from '../../component/footer';
-import { useState,useEffect } from 'react';
+import { useState,useEffect, useContext } from 'react';
 import { dbfire } from "../../config/firebase";
 import Table from '../../component/table/formTable'
+import {AuthContext} from '../../config/AuthContex'
 const Landing = () => {
   // const items: any[] | (() => any[]) = []
   const [data,setData]=useState<[]>([])
   const { Content } = Layout;
   const { token: { colorBgContainer }} = theme.useToken();
   const colRef = collection(dbfire,'application form')
-
+  const {currentUser} = useContext(AuthContext)
   useEffect(()=>{
     const display = onSnapshot(colRef,(querySnapshot)=>{
       const items: any=[] ;
@@ -64,6 +65,7 @@ const Landing = () => {
           <Content style={{ margin: '24px 16px 0' }}>
             <div className='flex' style={{ padding: 24, background: colorBgContainer }}>
               <h1 className='mx-auto font-bold text-2xl'>Created Apps</h1>
+              <h1 className='mx-auto font-bold text-2xl'>{currentUser?.email}</h1>
             </div>
             <div style={{ padding: 24,paddingTop: 0, minHeight: 360, background: colorBgContainer }}>
               <Table/>

@@ -10,6 +10,7 @@ import ApplicationForm from '../pages/applicationForm';
 import CreateComponents from '../pages/createComponents'
 type IRoute = {
   pathName: string,
+  hasParams?:boolean;
   component: JSX.Element | JSX.Element[] | ReactNode
 }[]
 
@@ -28,8 +29,9 @@ export const routes: IRoute = [
     pathName: routeName.LANDING,
     component: <Landing />,
   },
-  {
-    pathName: routeName.APPLICATION,
+    {
+      pathName: routeName.APPLICATION,
+      hasParams:true,
     component: <Application />,
   },
   {
@@ -38,6 +40,7 @@ export const routes: IRoute = [
   },
   {
     pathName: routeName.APPLICATIONFORM,
+    hasParams:true,
     component: <ApplicationForm />,
   },
   {

@@ -3,18 +3,14 @@ import {
   collection,
   query,
   where,} from "firebase/firestore";
-import { ref, listAll,getDownloadURL } from "firebase/storage";
-import {useEffect, useState} from "react";
-import { useCookies } from "react-cookie";
-import { Link } from "react-router-dom";
+import {useContext, useEffect, useState} from "react";
 import { dbfire } from "../../../config/firebase";
-import {storage}  from '../../../config/firebase'
+import { AuthContext } from "../../../config/AuthContex";
 const FormTable = ()=>{
-  const [cookies]=useCookies()
   const [posts,setPosts]=useState<[]>([])
-  const userId = cookies['user']
+  const {currentUser} = useContext(AuthContext)
   const colRef = collection(dbfire,'application form');
-  const q = query(colRef,where('userId','==',userId))
+  const q = query(colRef,where('userId','==',currentUser?.uid))
   useEffect(()=>{
     const display = onSnapshot(q,(querySnapshot)=>{
       const items: any=[] ;

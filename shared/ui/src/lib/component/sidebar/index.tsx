@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   AppstoreOutlined,
   DashboardOutlined,
@@ -9,7 +9,8 @@ import { MenuProps,Layout, Menu } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { getAuth, signOut } from 'firebase/auth';
 import { useCookies } from 'react-cookie'
-
+import { routeName } from '../../constant';
+import { AuthContext } from '../../config/AuthContex';
 // const Sidebar = () => {
   const Sidebar: React.FC = () => {
   const navigate = useNavigate();
@@ -17,7 +18,8 @@ import { useCookies } from 'react-cookie'
   const [cookie,removeCookie] =useCookies()
 
   const SignOut = () => {
-    removeCookie('user',{path:'/'})
+    removeCookie('docRef',{path:'/application'})
+    removeCookie('formKey',{path:'/'})
     signOut(auth)
       .then(() => {
         navigate('/');
@@ -70,7 +72,8 @@ const items: MenuItem[] = [
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };
-
+  const [cookies] = useCookies()
+  const key =cookies['docRef']
   return (
     <Sider style={{ paddingTop:20, width: 256 }}
     className='h-screen'
@@ -93,12 +96,17 @@ const items: MenuItem[] = [
         <Menu.Item key='1'>
           <DashboardOutlined/>
           <span>Dashboard</span>
-          <Link to='/landing'/>
+          <Link to={routeName.LANDING}/>
         </Menu.Item>
         <Menu.Item key='2'>
           <AppstoreOutlined/>
           <span>Application</span>
-          <Link to='/application'/>
+          <Link to={`${routeName.APPLICATION}/${useContext(AuthContext).currentUser?.uid}`}/>
+        </Menu.Item>
+        <Menu.Item key='3'>
+          <AppstoreOutlined/>
+          <span>Application Form</span>
+          <Link to={`${routeName.APPLICATION}/${useContext(AuthContext).currentUser?.uid}${routeName.APPLICATIONFORM}/${key}`}/>
         </Menu.Item>
         </Menu>
         <Menu>

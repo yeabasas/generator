@@ -1,22 +1,16 @@
 import { addDoc, collection } from 'firebase/firestore';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { dbfire } from '../../config/firebase';
 import { useCookies } from 'react-cookie';
 import { Select, Input, Button, Form, theme, Card } from 'antd';
-import { useNavigate } from 'react-router-dom';
 import { labels } from '../../data/json-form';
+import { AuthContext } from '../../config/AuthContex';
 const AppForm = () => {
   const [formName, setFormName] = useState('');
   const [description, setDescription] = useState('');
   const [formKey, setFormKey] = useState('');
-  const [inputLabel, setInputLabel] = useState('');
-  const [inputType, setInputType] = useState('');
-  const [inputKey, setInputKey] = useState('');
   const [cookies, setCookies] = useCookies();
   const [formList, setFormList] = useState([{ formName: "", formKey: "", Description: "" }])
-  const { token: { colorBgContainer }, } = theme.useToken();
-  const navigate = useNavigate();
-  const attributeDetails = { inputLabel: inputLabel, inputType: inputType, inputKey: inputKey };
   const handleInputChange = (e: { target: { name: string; value: string; }; }, index: string | number) => {
     const { name, value } = e.target;
     const lists = [...attributeList];
@@ -24,7 +18,8 @@ const AppForm = () => {
     console.log(lists)
     setAttributeList(lists);
   };
-  const userId = cookies['user'];
+  const {currentUser} = useContext(AuthContext)
+  const userId = currentUser?.uid
   const appRef = cookies['docRef']
   const [attributeList, setAttributeList] = useState([{ inputLabel: '', inputType: "", inputKey: "" }]);
 
@@ -62,7 +57,6 @@ const AppForm = () => {
   const buttonItemLayout = formLayout === 'horizontal' ? { wrapperCol: { span: 14, offset: 4 } } : null;
 
   const attributeItemLayout = formLayout === 'inline' ? { labelCol: { span: 13 }, wrapperCol: { span: 10 } } : null;
-  const attributeButtonItemLayout = formLayout === 'inline' ? { wrapperCol: { span: 4, offset: 10 } } : null;
 
  
 
@@ -78,9 +72,6 @@ const AppForm = () => {
     setAttributeList([...attributeList, { inputLabel: '', inputType: "", inputKey: '' }]);
   };
 
-  const handleFormAdd = () => {
-    console.log("form added")
-  }
   let lastValue = "";
   function onInput(e: any) {
     const currentValue = e.target.value;
