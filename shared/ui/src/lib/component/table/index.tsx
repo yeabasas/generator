@@ -1,4 +1,4 @@
-import { onSnapshot, collection, query, where } from 'firebase/firestore';
+import { onSnapshot, collection, query, where, QuerySnapshot } from 'firebase/firestore';
 import { ref, listAll, getDownloadURL } from 'firebase/storage';
 import { useContext, useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
@@ -28,8 +28,7 @@ const Table = () => {
       display();
     };
   }, []);
-  const key =cookies['docRef']
-
+  const key = cookies['docRef']
 
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -49,7 +48,6 @@ const Table = () => {
   };
 
   const handleCancel = () => {
-    console.log('Clicked cancel button');
     setOpen(false);
   };
 

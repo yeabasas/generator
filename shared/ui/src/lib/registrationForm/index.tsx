@@ -130,7 +130,7 @@ function LoginFormComponent() {
   return (
     <Container className="h-screen flex justify-center bg-no-repeat bg-cover bg-wave ">
       <FormContainer className='m-auto w-1/4'>
-      <CustomForm className='flex flex-col gap-2 justify-center rounded-2xl text-blue-100 bg-blue-200/75 p-9' onSubmit={handleSubmit(onSubmit)}>
+      <CustomForm className='flex flex-col gap-2 justify-center rounded-2xl text-blue-100 bg-blue-200/75 p-9' onSubmit={handleSubmit(onSubmit)} autoComplete='off'>
         <Title className='m-auto text-2xl font-semibold pb-9 text-blue-600'>Sign up</Title>
           <InputField
             type='text'

@@ -2,9 +2,9 @@ import { Layout, theme, Input, Button, Form, Card, Alert } from 'antd';
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import { dbfire } from '../../config/firebase';
 import Sidebar from '../../component/sidebar';
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, onSnapshot, query, where } from 'firebase/firestore';
 // import Table from '../../component/table';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { v4 } from 'uuid';
 import { storage } from '../../config/firebase';
@@ -26,6 +26,7 @@ const Application = () => {
 
   const [form] = Form.useForm();
   const [formLayout] = useState<LayoutType>('horizontal');
+  const [posts,setPosts]=useState<[]>([])
 
   type LayoutType = Parameters<typeof Form>[0]['layout'];
 
@@ -43,7 +44,6 @@ const Application = () => {
   const appDetails = { name: appName, description: description, userId: key };
   const colRef = collection(dbfire, 'application form');
   // let q = query(colRef,where('user','==',key))
-  
   const createApp = async () => {
     try {
       await addDoc(colRef, appDetails).then(function (docRef) {

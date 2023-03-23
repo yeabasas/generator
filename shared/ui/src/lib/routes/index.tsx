@@ -45,6 +45,7 @@ export const routes: IRoute = [
   },
   {
     pathName: routeName.CREATECOMPONENTS,
+    hasParams:true,
     component: <CreateComponents />,
   },
   {
