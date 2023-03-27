@@ -1,23 +1,24 @@
-import { Card, Layout, theme } from 'antd'
+import { Button, Card, Layout, theme } from 'antd'
 import { Content } from 'antd/es/layout/layout';
-import { collection, query, where, onSnapshot } from 'firebase/firestore';
-import React, { useContext, useEffect, useState } from 'react'
+import { collection, query, where, onSnapshot, doc } from 'firebase/firestore';
+import React, { createElement, useContext, useEffect, useState } from 'react'
 import { useCookies } from 'react-cookie';
+import { useParams } from 'react-router-dom';
 import FormSidebar from '../../component/formSidebar'
 import { AuthContext } from '../../config/AuthContex';
 import { dbfire } from '../../config/firebase';
+import { data } from '../../data/json-form';
 
 const CreateComponents = () => {
   const [form, setForm] = useState<[]>([]);
   const { currentUser } = useContext(AuthContext);
-  const [cookie, setCookie] = useCookies()
-  const key = cookie['docRef']
+  const params = useParams()
+  const userIden = params['formId']
   const {
     token: { colorBgContainer },
   } = theme.useToken();
-  const userId = currentUser?.uid;
   const colRef = collection(dbfire, 'form');
-  const q = query(colRef, where('appRef', '==', key));
+  const colRefApp = collection(dbfire, 'application');
   useEffect(() => {
     const display = onSnapshot(colRef, (querySnapshot) => {
       const items: any = [];
@@ -30,29 +31,39 @@ const CreateComponents = () => {
       display();
     };
   }, []);
+
   return (
     <div className='flex'>
       <Layout>
         <FormSidebar />
-        <div className="flex flex-col w-full">
-          {/* <Header style={{ padding: 0, background: colorBgContainer }} /> */}
+        <div className="flex w-full">
           <Content style={{ margin: '24px 16px 0' }}>
             <div style={{ padding: 24, background: colorBgContainer }}>
+              <Card className="w-2/3" bordered={false}>
                 {form.map((i: any, index) => (
-              <Card title={i.formName} className="w-2/3" bordered={false}>
                   <div key={index}>
-                    <p>{i.formName}</p>
-                    {i.attribute.map((c: any, v: React.Key | null | undefined) => (
-                      <div key={v} className='mb-6'>
-                        <p className='bg-blue-400'>input label = {c['inputLabel']}</p>
-                        <p className='bg-blue-500'>input key = {c.inputKey}</p>
-                        <p className='bg-blue-600'>input type = {c.inputType}</p>
-                      </div>
-                    ))}
-                  </div>
+                    {(() => {
+                      if (i.formKey != userIden) {
+                        return
+                      } else {
+                        return (
+                          i.attribute.map((c: any, v: React.Key | null | undefined) => {
+                            if (c.inputLabel) {
+                              return (
+                                <div className='flex gap-2 mb-4'>
+                                  {c.inputLabel}
+                                  {
+                                    createElement('input', { className: 'flex flex-col border' })
+                                  }
+                                </div>
+                              )
+                            }
+                          })
+                        )
+                      }
+                    })()}
+                  </div>))}
               </Card>
-                )
-                )}
             </div>
           </Content>
         </div>

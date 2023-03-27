@@ -10,7 +10,8 @@ export const routeName = {
   DND:'/dnd',
   APPLICATION:'/application',
   APPLICATIONFORM:`/applicationform`,
-  CREATECOMPONENTS:`/application/:key/applicationform/:key/attributes`,
+  APPLIST:`/applist`,
+  CREATECOMPONENTS:`/application/:id/applicationform/:id/attributes`,
   NOTFOUND:'*'
 }
 

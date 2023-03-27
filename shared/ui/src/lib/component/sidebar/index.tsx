@@ -66,8 +66,8 @@ const Sidebar: React.FC = () => {
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };
-  const [cookies] = useCookies()
-  const key = cookies['docRef']
+  const {currentUser} = useContext(AuthContext)
+  const key = currentUser?.uid
   return (
     <Sider 
       style={{ paddingTop: 20, width: 256 }}
@@ -89,7 +89,7 @@ const Sidebar: React.FC = () => {
           <span>Application</span>
           <Link to={`${routeName.APPLICATION}/${useContext(AuthContext).currentUser?.uid}`} />
         </Menu.Item>
-        <Menu.Item key='3'>
+        {/* <Menu.Item key='3'>
           <AppstoreOutlined />
           <span>Form att</span>
           <Link to={`${routeName.CREATECOMPONENTS}/${key}`}></Link>
@@ -99,8 +99,13 @@ const Sidebar: React.FC = () => {
           <span>Application Form</span>
           <Link to={`${routeName.APPLICATIONFORM}/${key}`} />
         </Menu.Item>
+        <Menu.Item key='7'>
+          <AppstoreOutlined />
+          <span>appList</span>
+          <Link to={`${routeName.APPLIST}/${key}`} />
+        </Menu.Item> */}
       </Menu>
-      <Menu>
+      <Menu className='mt-56'>
         <Menu.Item key='5' onClick={SignOut}>
           <LogoutOutlined />
           <span>Sign Out</span>

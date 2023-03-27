@@ -8,6 +8,7 @@ import Dnd from '../pages/dnd'
 import NotFound from '../pages/notFound'
 import ApplicationForm from '../pages/applicationForm';
 import CreateComponents from '../pages/createComponents'
+import AppList from '../pages/appList/appList'
 type IRoute = {
   pathName: string,
   hasParams?:boolean;
@@ -47,6 +48,11 @@ export const routes: IRoute = [
     pathName: routeName.CREATECOMPONENTS,
     hasParams:true,
     component: <CreateComponents />,
+  },
+  {
+    pathName: routeName.APPLIST,
+    hasParams:true,
+    component: <AppList />,
   },
   {
     pathName: routeName.NOTFOUND,

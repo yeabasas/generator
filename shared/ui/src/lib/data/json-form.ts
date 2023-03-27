@@ -4,7 +4,7 @@ export enum data {
     CHECKBOX = 'checkbox',
     SELECT = 'select',
     DATE = 'date',
-    LABEL = 'label'
+    LABEL = 'inputLabel'
 }
 
 export const labels={

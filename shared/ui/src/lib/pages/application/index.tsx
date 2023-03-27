@@ -1,8 +1,8 @@
-import { Layout, theme, Input, Button, Form, Card, Alert } from 'antd';
+import { Layout, theme, Input, Button, Form, Card, Alert, Modal, Space } from 'antd';
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import { dbfire } from '../../config/firebase';
 import Sidebar from '../../component/sidebar';
-import { addDoc, collection, onSnapshot, query, where } from 'firebase/firestore';
+import { addDoc, collection, doc, onSnapshot, query, setDoc, where } from 'firebase/firestore';
 // import Table from '../../component/table';
 import { useContext, useEffect, useState } from 'react';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -26,13 +26,13 @@ const Application = () => {
 
   const [form] = Form.useForm();
   const [formLayout] = useState<LayoutType>('horizontal');
-  const [posts,setPosts]=useState<[]>([])
+  const [posts, setPosts] = useState<[]>([])
 
   type LayoutType = Parameters<typeof Form>[0]['layout'];
 
   const formItemLayout =
     formLayout === 'horizontal'
-      ? { labelCol: { span: 3 }, wrapperCol: { span: 12 } }
+      ? { labelCol: { span: 8 }, wrapperCol: { span: 12 } }
       : null;
 
   const buttonItemLayout =
@@ -42,22 +42,11 @@ const Application = () => {
 
   const { Content } = Layout;
   const appDetails = { name: appName, description: description, userId: key };
-  const colRef = collection(dbfire, 'application form');
+  const colRef = collection(dbfire, 'application');
   // let q = query(colRef,where('user','==',key))
   const createApp = async () => {
     try {
-      await addDoc(colRef, appDetails).then(function (docRef) {
-        console.log(docRef.id);
-        setCookies('docRef', docRef.id);
-        <Table/>
-        // <Alert
-        //   className="flex"
-        //   message="App Created"
-        //   type="success"
-        //   showIcon
-        // />;
-        
-      });
+      await setDoc(doc(colRef), { ...appDetails, id: doc(colRef).id });
       if (imageUpload == null) return;
       const imageRef = ref(
         storage,
@@ -87,59 +76,33 @@ const Application = () => {
       key: 'description',
     },
   ];
+  const [open, setOpen] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [modalText, setModalText] = useState('');
+
+  const showModal = () => {
+    setOpen(true);
+  };
+
+  const handleOk = () => {
+    // createApp(true)
+    setConfirmLoading(true);
+    setTimeout(() => {
+      setOpen(false);
+      setConfirmLoading(false);
+    }, 4000);
+  };
+
+  const handleCancel = () => {
+    setOpen(false);
+  };
   return (
     <div className="flex">
       <Layout>
         <Sidebar />
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col w-2/3">
           {/* <Header style={{ padding: 0, background: colorBgContainer }} /> */}
           <Content style={{ margin: '24px 16px 0' }}>
-            <div style={{ padding: 24, background: colorBgContainer }}>
-              <Card title="Application" className="w-2/3" bordered={false}>
-                <Form
-                  {...formItemLayout}
-                  form={form}
-                  className="flex flex-col "
-                >
-                  <Form.Item label="App Name">
-                    <Input
-                      name="appName"
-                      required
-                      placeholder="Application name"
-                      onChange={(e) => {
-                        setAppName(e.target.value);
-                      }}
-                    />
-                  </Form.Item>
-                  <Form.Item label="Description:">
-                    <Input
-                      name="description"
-                      required
-                      placeholder="Some thing..."
-                      onChange={(e) => {
-                        setDescription(e.target.value);
-                      }}
-                    />
-                  </Form.Item>
-                  <Form.Item label="Image">
-                    <Input
-                      required
-                      name="icon"
-                      type="file"
-                      placeholder="icon img"
-                      onChange={(e) => {
-                        setImageUpload(e.target.files?.[0] || null);
-                      }}
-                    />
-                  </Form.Item>
-                  <Form.Item {...buttonItemLayout}>
-                    <Button onClick={createApp} type="default">
-                      Submit
-                    </Button>
-                  </Form.Item>
-                </Form>
-              </Card>
-            </div>
             <div
               style={{
                 padding: 24,
@@ -147,7 +110,60 @@ const Application = () => {
                 background: colorBgContainer,
               }}
             >
-              <Card title="Created Apps" className="w-2/3">
+              <Card title='Applications' className="w-full">
+              <Button type="default" className='mb-2 w-fit' onClick={showModal}>
+                Add
+              </Button>
+                <Space wrap>
+                  <Modal
+                    title="Application"
+                    open={open}
+                    onOk={createApp}
+                    confirmLoading={confirmLoading}
+                    onCancel={handleCancel}
+                    okButtonProps={{ type: 'default' }}
+                  >
+                    <Card className="w-full" bordered={false}>
+                      <Form
+                        {...formItemLayout}
+                        form={form}
+                        className="flex flex-col "
+                      >
+                        <Form.Item label="App Name">
+                          <Input
+                            name="appName"
+                            required
+                            placeholder="Application name"
+                            onChange={(e) => {
+                              setAppName(e.target.value);
+                            }}
+                          />
+                        </Form.Item>
+                        <Form.Item label="Description:">
+                          <Input
+                            name="description"
+                            required
+                            placeholder="Some thing..."
+                            onChange={(e) => {
+                              setDescription(e.target.value);
+                            }}
+                          />
+                        </Form.Item>
+                        <Form.Item label="Image">
+                          <Input
+                            required
+                            name="icon"
+                            type="file"
+                            placeholder="icon img"
+                            onChange={(e) => {
+                              setImageUpload(e.target.files?.[0] || null);
+                            }}
+                          />
+                        </Form.Item>
+                      </Form>
+                    </Card>
+                  </Modal>
+                </Space>
                 <Table />
               </Card>
             </div>
