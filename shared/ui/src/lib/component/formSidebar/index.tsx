@@ -101,7 +101,7 @@ const FormSidebar: React.FC = () => {
           Forms
         </h1>
         {formApp.map((i: any, index) => (
-          <Link to={`/application/${currentUser?.uid}/forms/${i.appId}/attribute/${i.formKey}`}>
+          <Link to={`/application/${currentUser?.uid}/forms/${i.appId}/attribute/${i.id}`}>
             <div key={index} className='mx-6 flex'>
               {(() => {
                 if (i.appId != pathId) return;

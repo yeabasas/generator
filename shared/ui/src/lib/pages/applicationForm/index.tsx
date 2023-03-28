@@ -10,6 +10,7 @@ import {
   Modal,
   Layout,
   theme,
+  message,
 } from 'antd';
 import { labels } from '../../data/json-form';
 import { AuthContext } from '../../config/AuthContex';
@@ -69,7 +70,9 @@ const ApplicationForm = () => {
   const createForm = async (event: any) => {
     event.preventDefault();
     try {
-      await setDoc(doc(colRef), { ...formDetails, id: doc(colRef).id });
+      await setDoc(doc(colRef), { ...formDetails, id: doc(colRef).id })
+      .then(message.success('Successfully Created!'))
+      .then(()=>setOpen(false))
     } catch (error) {
       console.log(error);
     }
@@ -94,11 +97,14 @@ const ApplicationForm = () => {
       ? { labelCol: { span: 13 }, wrapperCol: { span: 10 } }
       : null;
 
-  const handleInputChangee = ( e: any, index: string | number ) => {
-    let value;
+  const handleInputChanged = (
+    e:{ name: string; value: string } ,
+    index: string | number) => {
+    const { name, value } = e;
     const list = [...formList];
-    list[index][value] = e;
-    console.log(e);
+    list[index][name] = value;
+    setFormList(list)
+    console.log(formList);
   };
 
   const handleFormDuplicate = () => {
@@ -238,15 +244,11 @@ const ApplicationForm = () => {
                               aria-required
                               // value={formData.inputType}
                               style={{ width: 100 }}
-                              onChange={(e) => handleInputChangee(e, index)}
+                              onChange={(e) => handleInputChanged(e, index)}
                               options={[
                                 { name: 'text', value: 'text', label: 'text' },
                                 { name: 'select', value: 'select', label: 'select' },
-                                {
-                                  name: 'checkbox',
-                                  value: 'checkbox',
-                                  label: 'checkbox',
-                                },
+                                { name: 'checkbox', value: 'checkbox', label: 'checkbox',},
                                 { name: 'date', value: 'date', label: 'date' },
                               ]}
                             />

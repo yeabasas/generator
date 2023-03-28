@@ -48,7 +48,7 @@ const Sidebar: React.FC = () => {
     getItem('Dashboard', '1', <DashboardOutlined />),
     // getItem('', '2', <DesktopOutlined />),
 
-    getItem('Application', 'sub1', <MailOutlined />, [
+    getItem('Application', 'sub1', <AppstoreOutlined />, [
       getItem('Form', '5')
     ]),
 
@@ -70,14 +70,17 @@ const Sidebar: React.FC = () => {
   const key = currentUser?.uid
   return (
     <Sider 
-      style={{ paddingTop: 20, width: 256 }}
+      style={{ paddingTop: 20, width: 256}}
       className='h-screen'
       breakpoint="lg"
+      collapsible
+      collapsed={collapsed}
+      onCollapse={toggleCollapsed}
       collapsedWidth="0">
       <Menu
         mode="inline"
         theme="dark"
-        inlineCollapsed={collapsed}
+        // items={items}
       >
         <Menu.Item key='1'>
           <DashboardOutlined />
@@ -105,7 +108,7 @@ const Sidebar: React.FC = () => {
           <Link to={`${routeName.APPLIST}/${key}`} />
         </Menu.Item> */}
       </Menu>
-      <Menu className='mt-56'>
+      <Menu className='mt-auto'>
         <Menu.Item key='5' onClick={SignOut}>
           <LogoutOutlined />
           <span>Sign Out</span>

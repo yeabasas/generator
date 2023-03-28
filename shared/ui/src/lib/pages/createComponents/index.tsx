@@ -1,24 +1,18 @@
-import { Button, Card, Layout, theme } from 'antd'
+import { Card, Layout, theme } from 'antd'
 import { Content } from 'antd/es/layout/layout';
-import { collection, query, where, onSnapshot, doc } from 'firebase/firestore';
-import React, { createElement, useContext, useEffect, useState } from 'react'
-import { useCookies } from 'react-cookie';
+import { collection, onSnapshot } from 'firebase/firestore';
+import React, { createElement, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import FormSidebar from '../../component/formSidebar'
-import { AuthContext } from '../../config/AuthContex';
 import { dbfire } from '../../config/firebase';
-import { data } from '../../data/json-form';
 
 const CreateComponents = () => {
   const [form, setForm] = useState<[]>([]);
-  const { currentUser } = useContext(AuthContext);
   const params = useParams()
   const userIden = params['formId']
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
+  const { token: { colorBgContainer }, } = theme.useToken();
   const colRef = collection(dbfire, 'form');
-  const colRefApp = collection(dbfire, 'application');
+  const [element, setElement] = useState('')
   useEffect(() => {
     const display = onSnapshot(colRef, (querySnapshot) => {
       const items: any = [];
@@ -32,6 +26,17 @@ const CreateComponents = () => {
     };
   }, []);
 
+  const handleInputChange = (
+    e: { target: { name: string; value: string } },
+    index: string | number
+  ) => {
+    const { name, value } = e.target;
+    const lists = [...element];
+    lists[index][name] = value;
+    console.log(lists);
+    // setElement(lists);
+  };
+
   return (
     <div className='flex'>
       <Layout>
@@ -43,26 +48,24 @@ const CreateComponents = () => {
                 {form.map((i: any, index) => (
                   <div key={index}>
                     {(() => {
-                      if (i.formKey != userIden) {
-                        return
-                      } else {
+                      if (i.id != userIden) return;
+                      else {
                         return (
                           i.attribute.map((c: any, v: React.Key | null | undefined) => {
-                            if (c.inputLabel) {
-                              return (
-                                <div className='flex gap-2 mb-4'>
-                                  {c.inputLabel}
-                                  {
-                                    createElement('input', { className: 'flex flex-col border' })
-                                  }
-                                </div>
-                              )
-                            }
+                            return (
+                              <div key={v} className='flex gap-2 mb-4'>
+                                {c.inputLabel}
+                                {
+                                  createElement('input', { name: `${c.inputLabel}`, className: 'flex flex-col border', onChange: (e) => setElement(e.target.value) })
+                                }
+                              </div>
+                            )
                           })
                         )
                       }
                     })()}
-                  </div>))}
+                  </div>
+                ))}
               </Card>
             </div>
           </Content>

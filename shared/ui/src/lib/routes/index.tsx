@@ -4,11 +4,9 @@ import Login from '../loginForm';
 import Landing from '../pages/landing';
 import Registration from '../registrationForm';
 import Application from '../pages/application';
-import Dnd from '../pages/dnd'
 import NotFound from '../pages/notFound'
 import ApplicationForm from '../pages/applicationForm';
 import CreateComponents from '../pages/createComponents'
-import AppList from '../pages/appList/appList'
 type IRoute = {
   pathName: string,
   hasParams?:boolean;
@@ -36,10 +34,6 @@ export const routes: IRoute = [
     component: <Application />,
   },
   {
-    pathName: routeName.DND,
-    component: <Dnd />,
-  },
-  {
     pathName: routeName.APPLICATIONFORM,
     hasParams:true,
     component: <ApplicationForm />,
@@ -48,11 +42,6 @@ export const routes: IRoute = [
     pathName: routeName.CREATECOMPONENTS,
     hasParams:true,
     component: <CreateComponents />,
-  },
-  {
-    pathName: routeName.APPLIST,
-    hasParams:true,
-    component: <AppList />,
   },
   {
     pathName: routeName.NOTFOUND,
