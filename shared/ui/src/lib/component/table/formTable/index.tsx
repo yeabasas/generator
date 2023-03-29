@@ -1,4 +1,5 @@
 import { Card } from 'antd';
+import { ref, remove } from 'firebase/database';
 import { onSnapshot, collection, query, where, doc, deleteDoc } from 'firebase/firestore';
 import { useContext, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -12,13 +13,14 @@ const FormTable = () => {
   const colRef = collection(dbfire, 'form');
   const params = useParams()
   const pathId = params['appId']
+  const colRefDoc = doc(collection(dbfire, 'form'));
   const q = query(colRef, where('userId', '==', userId));
 
   useEffect(() => {
     const display = onSnapshot(q, (querySnapshot) => {
       const items: any = [];
       querySnapshot.forEach((doc) => {
-        items.push(doc.data());
+        items.push({...doc.data(),docId:doc.id});
       });
       setPosts(items);
     });
@@ -27,10 +29,15 @@ const FormTable = () => {
     };
   }, []);
 
-  const deleteForm = async (postId: string | undefined)=>{
-    const formDoc = doc(colRef,postId)
-    await deleteDoc(formDoc)
+  const deleteForm = async (id:any)=>{
+    try {
+      await deleteDoc(doc(colRef,id))
+      .then(()=>console.log('deleted'))
+    } catch (error) {
+      console.log(error)
+    }
   }
+
   return (
     <div>
     <table className="w-full">
@@ -56,9 +63,9 @@ const FormTable = () => {
                     <td>
                       <Link to={`attribute/${post.id}`}>
                         <button className="bg-gray-200 p-1 mr-2 border rounded">Details</button>
-                      </Link>
+                      </Link> 
                       <button className="bg-gray-400 p-1 mr-2 border rounded">Update</button>
-                      <button className="bg-red-400 p-1 border rounded" onClick={()=>{deleteForm(post.id)}}>Delete</button>
+                      <button className="bg-red-400 p-1 border rounded" onClick={()=>deleteForm(post.docId)}>Delete</button>
                     </td>
                 </tr>
                 )

@@ -7,7 +7,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { v4 } from 'uuid';
 import { storage } from '../../config/firebase';
 import Footer from '../../component/footer';
-import Table from '../../component/table';
+import Table from '../../component/table/appTable';
 import { AuthContext } from '../../config/AuthContex';
 
 const Application = () => {

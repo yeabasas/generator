@@ -6,7 +6,7 @@ import { Layout, theme } from 'antd';
 import Footer from '../../component/footer';
 import { useState,useEffect, useContext } from 'react';
 import { dbfire } from "../../config/firebase";
-import Table from '../../component/table'
+import Table from '../../component/table/appTable'
 import {AuthContext} from '../../config/AuthContex'
 const Landing = () => {
   // const items: any[] | (() => any[]) = []

@@ -87,10 +87,6 @@ const ApplicationForm = () => {
     formLayout === 'horizontal'
       ? { labelCol: { span: 3 }, wrapperCol: { span: 14 } }
       : null;
-  const buttonItemLayout =
-    formLayout === 'horizontal'
-      ? { wrapperCol: { span: 14, offset: 4 } }
-      : null;
 
   const attributeItemLayout =
     formLayout === 'inline'
@@ -128,20 +124,12 @@ const ApplicationForm = () => {
     setOpen(true);
   };
 
-  const handleOk = () => {
-    // createApp(true)
-    setConfirmLoading(true);
-    setTimeout(() => {
-      setOpen(false);
-      setConfirmLoading(false);
-    }, 4000);
-  };
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
+  const { token: { colorBgContainer }, } = theme.useToken();
+
   const handleCancel = () => {
     setOpen(false);
   };
+
   return (
     <div className='flex'>
       <Layout>
