@@ -1,4 +1,4 @@
-import { Card, Layout, theme } from 'antd'
+import { Button, Card, Layout, theme } from 'antd'
 import { Content } from 'antd/es/layout/layout';
 import { collection, doc, onSnapshot, setDoc } from 'firebase/firestore';
 import React, { createElement, useEffect, useState } from 'react'
@@ -14,7 +14,7 @@ const CreateComponents = () => {
   const colRef = collection(dbfire, 'form');
   const colRefAtt = collection(dbfire, 'customReceivedData');
   const [element, setElement] = useState<any[]>([])
-  const appDetails = { customData:[...element] };
+  const appDetails = {name:`${element.map((i:any)=>i)}`};
 
   useEffect(() => {
     const display = onSnapshot(colRef, (querySnapshot) => {
@@ -29,18 +29,18 @@ const CreateComponents = () => {
     };
   }, []);
 
-  const handleInputChange = ( e: { target: { value: string } },
-    index: string | number)=>{
+  const handleInputChange = (e: { target: { value: string } },
+    index: string | number) => {
     const { value } = e.target;
     const lists = [...element];
     lists[index] = value;
     setElement(lists);
   };
 
-  const handleSubmit = async ()=>{
+  const handleSubmit = async () => {
     try {
-      await setDoc(doc(colRefAtt),appDetails)
-      .then(()=>console.log('sent'))
+      await setDoc(doc(colRefAtt), appDetails)
+        .then(() => console.log('sent'))
     } catch (error) {
       console.log(error)
     }
@@ -67,9 +67,10 @@ const CreateComponents = () => {
                                   createElement(
                                     'input',
                                     {
+                                      type:`${c.inputType}`,
                                       name: `${c.inputLabel}`,
                                       className: 'flex flex-col border',
-                                      onChange: (e) => handleInputChange(e,index)
+                                      onChange: (e: { target: { value: string; }; }) => handleInputChange(e, index)
                                     }
                                   )
                                 }
@@ -81,8 +82,10 @@ const CreateComponents = () => {
                     })()}
                   </div>
                 ))}
-                <button onClick={handleSubmit}>submit</button>
               </Card>
+            </div>
+            <div style={{ padding: 24, background: colorBgContainer }}>
+                <Button type='primary' className='bg-cyan-500' onClick={handleSubmit}>submit</Button>
             </div>
           </Content>
         </div>

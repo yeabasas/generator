@@ -40,8 +40,11 @@ const ApplicationForm = () => {
   };
   const { currentUser } = useContext(AuthContext);
   const userId = currentUser?.uid;
+  const [typeList, setTypeList] = useState(
+    { inputType: ''}
+  );
   const [attributeList, setAttributeList] = useState([
-    { inputLabel: '', inputType: '', inputKey: '' },
+    { inputLabel: '', inputKey: '' , inputType: typeList.inputType },
   ]);
 
   const colRefApp = collection(dbfire, 'application');
@@ -72,10 +75,11 @@ const ApplicationForm = () => {
     try {
       await setDoc(doc(colRef), { ...formDetails, id: doc(colRef).id })
       .then(message.success('Successfully Created!'))
-      .then(()=>setOpen(false))
+      .then(()=>handleCancel())
     } catch (error) {
       console.log(error);
     }
+    
   };
 
   const [form] = Form.useForm();
@@ -94,19 +98,19 @@ const ApplicationForm = () => {
       : null;
 
   const handleInputChanged = (
-    e:{ name: string; value: string } ,
+    e:{ value: string } ,
     index: string | number) => {
-    const { name, value } = e;
-    const list = [...formList];
-    list[index][name] = value;
-    setFormList(list)
-    console.log(formList);
+    const { value } = e;
+    const listed = {...typeList};
+    listed[index] = value;
+    setTypeList(listed)
+    console.log(listed);
   };
 
   const handleFormDuplicate = () => {
     setAttributeList([
       ...attributeList,
-      { inputLabel: '', inputType: '', inputKey: '' },
+      { inputLabel: '', inputKey: '',inputType: typeList.inputType },
     ]);
   };
 
@@ -128,7 +132,12 @@ const ApplicationForm = () => {
 
   const handleCancel = () => {
     setOpen(false);
+    setFormName('');
+    setFormKey('');
+    setDescription('');
+    // setAttributeList([{inputLabel: '', inputKey: '' }]);
   };
+const [ selected,setSelected]=useState(null)
 
   return (
     <div className='flex'>
@@ -190,7 +199,6 @@ const ApplicationForm = () => {
                     </Card>
                     <Card title="Attributes" className="w-full mb-4" bordered={true}>
                       <div className="flex justify-end mr-6">
-                        { }
                         <Button
                           onClick={handleFormDuplicate}
                           type="dashed"
@@ -230,10 +238,14 @@ const ApplicationForm = () => {
                             <Select
                               placeholder="input types"
                               aria-required
-                              // value={formData.inputType}
                               style={{ width: 100 }}
-                              onChange={(e) => handleInputChanged(e, index)}
-                              options={[
+                              value={selected}
+                              onChange={(e)=>{
+                                const selectType = e;
+                                setSelected(selectType)
+                              }}
+                              options={
+                              [
                                 { name: 'text', value: 'text', label: 'text' },
                                 { name: 'select', value: 'select', label: 'select' },
                                 { name: 'checkbox', value: 'checkbox', label: 'checkbox',},
