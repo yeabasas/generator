@@ -64,11 +64,10 @@ const Landing = () => {
         <div className='flex flex-col w-full'>
           <Content style={{ margin: '24px 16px 0' }}>
             <div className='flex' style={{ padding: 24, background: colorBgContainer }}>
-              <h1 className='mx-auto font-bold text-2xl'>Created Apps</h1>
               <h1 className='mx-auto font-bold text-2xl'>{currentUser?.email}</h1>
             </div>
             <div style={{ padding: 24,paddingTop: 0, minHeight: 360, background: colorBgContainer }}>
-              <Table/>
+              <h1>Dashboard</h1>
             </div>
           </Content>
           <Footer/>

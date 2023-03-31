@@ -1,17 +1,7 @@
 import { collection, doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { useContext, useEffect, useState } from 'react';
 import { dbfire } from '../../config/firebase';
-import {
-  Select,
-  Input,
-  Button,
-  Form,
-  Card,
-  Modal,
-  Layout,
-  theme,
-  message,
-} from 'antd';
+import { Select,Input,Button,Form,Card,Modal,Layout,theme,message,} from 'antd';
 import { labels } from '../../data/json-form';
 import { AuthContext } from '../../config/AuthContex';
 import { useParams } from 'react-router-dom';
@@ -39,12 +29,11 @@ const ApplicationForm = () => {
     setAttributeList(lists);
   };
   const { currentUser } = useContext(AuthContext);
-  const userId = currentUser?.uid;
-  const [typeList, setTypeList] = useState(
-    { inputType: ''}
-  );
+  const [ selected,setSelected]=useState('')
+
+const userId = currentUser?.uid;
   const [attributeList, setAttributeList] = useState([
-    { inputLabel: '', inputKey: '' , inputType: typeList.inputType },
+    { inputLabel: '', inputKey: '',inputType: `` },
   ]);
 
   const colRefApp = collection(dbfire, 'application');
@@ -69,7 +58,9 @@ const ApplicationForm = () => {
     appId: appId,
     attribute: attributeList,
   };
+
   const colRef = collection(dbfire, 'form');
+
   const createForm = async (event: any) => {
     event.preventDefault();
     try {
@@ -97,20 +88,18 @@ const ApplicationForm = () => {
       ? { labelCol: { span: 13 }, wrapperCol: { span: 10 } }
       : null;
 
-  const handleInputChanged = (
-    e:{ value: string } ,
-    index: string | number) => {
-    const { value } = e;
-    const listed = {...typeList};
-    listed[index] = value;
-    setTypeList(listed)
-    console.log(listed);
+  const handleChange = (selected: string, index: number|string) => {
+    const { name, value } = {name:"inputType",value:selected};
+    const lists = [...attributeList];
+    lists[index][name] = value;
+    console.log(lists);
+    setAttributeList(lists);
   };
 
   const handleFormDuplicate = () => {
     setAttributeList([
       ...attributeList,
-      { inputLabel: '', inputKey: '',inputType: typeList.inputType },
+      { inputLabel: '', inputKey: '',inputType: ''},
     ]);
   };
 
@@ -137,7 +126,6 @@ const ApplicationForm = () => {
     setDescription('');
     // setAttributeList([{inputLabel: '', inputKey: '' }]);
   };
-const [ selected,setSelected]=useState(null)
 
   return (
     <div className='flex'>
@@ -239,11 +227,8 @@ const [ selected,setSelected]=useState(null)
                               placeholder="input types"
                               aria-required
                               style={{ width: 100 }}
-                              value={selected}
-                              onChange={(e)=>{
-                                const selectType = e;
-                                setSelected(selectType)
-                              }}
+                              // value={selected}
+                              onChange={(e)=>handleChange(e,index)}
                               options={
                               [
                                 { name: 'text', value: 'text', label: 'text' },
@@ -253,6 +238,7 @@ const [ selected,setSelected]=useState(null)
                               ]}
                             />
                           </Form.Item>
+                          {selected}
                         </Form>
                       ))}
                     </Card>

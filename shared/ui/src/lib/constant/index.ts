@@ -1,8 +1,4 @@
-import { useParams } from "react-router-dom";
-const parameters = ()=>{
-  const { id } = useParams()
-  return id
-}
+
 export const routeName = {
   LOGIN: '/',
   REGISTRATION: '/registration',

@@ -89,7 +89,7 @@ const Table = () => {
 
   return (
     <form> 
-      <table className="w-full">
+      <table className="min-w-full">
         <thead className="bg-gray-100 rounded">
           <tr >
             <th className="p-2 border border-l-0 border-t-0">App Name</th>

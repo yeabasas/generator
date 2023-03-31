@@ -12,9 +12,10 @@ const CreateComponents = () => {
   const userIden = params['formId']
   const { token: { colorBgContainer }, } = theme.useToken();
   const colRef = collection(dbfire, 'form');
-  const colRefAtt = collection(dbfire, 'customReceivedData');
-  const [element, setElement] = useState<any[]>([])
-  const appDetails = {name:`${element.map((i:any)=>i)}`};
+  const attColRef = collection(dbfire, 'customReceivedData');
+  const [element, setElement] = useState([{}])
+
+  const appDetails = { element }
 
   useEffect(() => {
     const display = onSnapshot(colRef, (querySnapshot) => {
@@ -29,22 +30,22 @@ const CreateComponents = () => {
     };
   }, []);
 
-  const handleInputChange = (e: { target: { value: string } },
-    index: string | number) => {
-    const { value } = e.target;
-    const lists = [...element];
-    lists[index] = value;
-    setElement(lists);
-  };
-
+  const handleInputChange = (e: { target: { name: any, value: any }; }) => {
+    const { name, value } = e.target;
+    const list = {...element}
+    list[name] = value
+    console.log(list)
+    setElement(list)
+  }
   const handleSubmit = async () => {
     try {
-      await setDoc(doc(colRefAtt), appDetails)
+      await setDoc(doc(attColRef), appDetails)
         .then(() => console.log('sent'))
     } catch (error) {
       console.log(error)
     }
   }
+
   return (
     <div className='flex'>
       <Layout>
@@ -67,10 +68,10 @@ const CreateComponents = () => {
                                   createElement(
                                     'input',
                                     {
-                                      type:`${c.inputType}`,
+                                      type: `${c.inputType}`,
                                       name: `${c.inputLabel}`,
                                       className: 'flex flex-col border',
-                                      onChange: (e: { target: { value: string; }; }) => handleInputChange(e, index)
+                                      onChange: (e: { target: { name: string, value: string; }; }) => handleInputChange(e)
                                     }
                                   )
                                 }
@@ -85,7 +86,7 @@ const CreateComponents = () => {
               </Card>
             </div>
             <div style={{ padding: 24, background: colorBgContainer }}>
-                <Button type='primary' className='bg-cyan-500' onClick={handleSubmit}>submit</Button>
+              <Button type='primary' className='bg-cyan-500' onClick={handleSubmit}>Submit</Button>
             </div>
           </Content>
         </div>
