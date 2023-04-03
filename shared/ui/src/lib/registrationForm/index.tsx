@@ -8,7 +8,8 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { app, database, dbfire } from '../config/firebase';
 import { ref, set, get } from 'firebase/database';
 import { useForm } from 'react-hook-form';
-import { addDoc, collection, doc, setDoc} from 'firebase/firestore';
+import { doc, setDoc} from 'firebase/firestore';
+import { message } from 'antd';
 
 const Container = styled.div({
 });
@@ -58,7 +59,6 @@ function LoginFormComponent() {
   const {
     register, handleSubmit, formState: { errors },
   } = useForm();
-  const colRef = collection(dbfire, 'users');
   const registerUserHandler = async (values: any) => {
     try {
       const userDetails = {
@@ -76,10 +76,8 @@ function LoginFormComponent() {
       const key = user.user.uid
       const starCountRef = ref(database, `users/${key}`);
       const value = (await get(starCountRef)).val();
-      /************fireStore */
-      await setDoc(doc(dbfire,'users',key),userDetails);
-
-      if (value?.email) {
+      
+      if (value == values.email) {
         setBtnDetails({
           loader: false,
           message: 'Account details present',
@@ -91,18 +89,19 @@ function LoginFormComponent() {
           });
         }, 2000);
         return;
+      }else{
+
+        await set(ref(database, `users/${user.user.uid}`), userDetails);
+        await setDoc(doc(dbfire,'users',key),userDetails);
+
+        setBtnDetails({
+          loader: false,
+          message: 'Account created Successfully',
+        });
+        setTimeout(() => {
+          navigate(routeName.LOGIN);
+        }, 2000);
       }
-
-     
-     await set(ref(database, `users/${user.user.uid}`), userDetails);
-
-      setBtnDetails({
-        loader: false,
-        message: 'Account created Successfully',
-      });
-      setTimeout(() => {
-        navigate(routeName.LOGIN);
-      }, 2000);
     } catch (e: any) {
       setBtnDetails((pre) => ({
         ...pre,
@@ -111,6 +110,7 @@ function LoginFormComponent() {
       const { code, message } = e;
       console.log('Error', code, message);
     }
+    message.error('Account details present')
   };
 
   const onSubmit = (values: any) => {
