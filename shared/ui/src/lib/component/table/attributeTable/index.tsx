@@ -85,24 +85,24 @@ const AttributeTable = () => {
           {attCustomData.map((p: any, index) => (
             <>
               {customData.map((i: any, index) => (
-                <div className="flex justify-around">
+                <>
                   {(() => {
                     if (i.id != formId) return;
                     else {
                       return i.attribute.map((k: any, id: any) => {
                         return (() => {
-                          if (i.inputLabel != p[`${i.inputLabel}`]) return;
+                          if (k.inputLabel == p[k.inputLabel]) return <p>{p[k.inputLabel]}</p>;
                           else
                             return (
-                              <tr className="flex justify-around">
-                                <td>{p[`name`]}</td>
+                              <tr className="flex border p-4 justify-around">
+                                <td>{p[k.inputLabel]}</td>
                               </tr>
                             );
                         })();
                       });
                     }
                   })()}
-                </div>
+                </>
               ))}
               {/* {(() => {
                 if (i.formId != formId) return;
