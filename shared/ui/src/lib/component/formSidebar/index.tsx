@@ -1,25 +1,38 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { AppstoreOutlined, DashboardOutlined, MailOutlined, LogoutOutlined, } from '@ant-design/icons';
+import {
+  AppstoreOutlined,
+  DashboardOutlined,
+  MailOutlined,
+  LogoutOutlined,
+} from '@ant-design/icons';
 import { MenuProps, Layout, Menu } from 'antd';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { getAuth, signOut } from 'firebase/auth';
 import { useCookies } from 'react-cookie';
 import { routeName } from '../../constant';
 import { AuthContext } from '../../config/AuthContex';
-import { collection, query, where, onSnapshot, doc, getFirestore } from 'firebase/firestore';
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+  doc,
+  getFirestore,
+} from 'firebase/firestore';
 import { dbfire } from '../../config/firebase';
 
 const FormSidebar: React.FC = () => {
   const navigate = useNavigate();
   const auth = getAuth();
   const [formApp, setFormApp] = useState<[]>([]);
-  const params = useParams()
-  const pathId = params['appId']
+  const params = useParams();
+  const appId = params['appId'];
   const colRef = collection(dbfire, 'form');
   const { currentUser } = useContext(AuthContext);
+  const q = query(colRef, where('appId', '==', appId));
 
   useEffect(() => {
-    const display = onSnapshot(colRef, (querySnapshot) => {
+    const display = onSnapshot(q, (querySnapshot) => {
       const items: any = [];
       querySnapshot.forEach((doc) => {
         items.push(doc.data());
@@ -92,28 +105,17 @@ const FormSidebar: React.FC = () => {
       collapsedWidth="0"
       onCollapse={toggleCollapsed}
     >
-      <Menu
-        mode="inline"
-        theme="dark"
-        inlineCollapsed={collapsed}
-      >
+      <Menu mode="inline" theme="dark" inlineCollapsed={collapsed}>
         <h1 className="text-xl flex justify-center text-white mb-2 pb-2 mx-4 border-2 border-white border-b-white-500 border-t-0 border-l-0 border-r-0">
           Forms
         </h1>
         {formApp.map((i: any, index) => (
-          <Link to={`/application/${currentUser?.uid}/forms/${i.appId}/attribute/${i.id}`}>
-            <div key={index} className='mx-6 flex'>
-              {(() => {
-                if (i.appId != pathId) return;
-                else {
-                  return (
-                    <Menu.Item key={index}>
-                      <span>{i.formName}</span>
-                    </Menu.Item>
-                  )
-                }
-              })()}
-            </div>
+          <Link
+            to={`/application/${currentUser?.uid}/forms/${i.appId}/attribute/${i.id}`}
+          >
+            <Menu.Item key={index}>
+              <span>{i.formName}</span>
+            </Menu.Item>
           </Link>
         ))}
       </Menu>

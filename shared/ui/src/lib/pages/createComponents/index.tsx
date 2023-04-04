@@ -25,7 +25,7 @@ const CreateComponents = () => {
     const display = onSnapshot(colRef, (querySnapshot) => {
       const items: any = [];
       querySnapshot.forEach((doc) => {
-        items.push(doc.data());
+        items.push({...doc.data(),attId: doc.id});
       });
       setForm(items);
     });
@@ -95,7 +95,7 @@ const CreateComponents = () => {
                                     {c.inputLabel}
                                     {createElement('input', {
                                       type: `${c.inputType}`,
-                                      name: `${c.inputLabel}`,
+                                      name: `${c.inputKey}`,
                                       className: 'flex flex-col border',
                                       onChange: (e: {
                                         target: {

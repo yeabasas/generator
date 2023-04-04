@@ -7,7 +7,8 @@ import { AuthContext } from '../../../config/AuthContex';
 import { dbfire } from '../../../config/firebase';
 import UpgradeOutlinedIcon from '@mui/icons-material/UpgradeOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+
 const Table = () => {
   const [posts, setPosts] = useState<[]>([]);
   const { currentUser } = useContext(AuthContext);
@@ -78,13 +79,11 @@ const Table = () => {
     const socRef = doc(dbfire,'application',key)
     try {
       await updateDoc(socRef,appDetails)
+      .then(()=>setEditPostId(null))
       .then(message.success('updated successfully'))
-      
     } catch (error) {
       console.log(error)
     }
-    
-    setEditPostId(null);
   };
 
   return (
@@ -134,7 +133,7 @@ const Table = () => {
                   <td className='border border-r-0 pl-9'>{post.description}</td>
                   <td>
                     <Link to={`forms/${post.id}`}>
-                      <Button type='primary' className="bg-blue-500 mx-2"><SettingsOutlinedIcon /></Button>
+                      <Button type='primary' className="bg-blue-500 mx-2"><InfoOutlinedIcon /></Button>
                     </Link>
                     <Button type='default' className="mr-2" onClick={(event) => handleEditClick(event, post)}><UpgradeOutlinedIcon/></Button>
                     <Button danger type='default' onClick={() => deleteApp(post.appId)}><DeleteOutlinedIcon /></Button>

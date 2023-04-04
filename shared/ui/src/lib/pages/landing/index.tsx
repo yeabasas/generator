@@ -15,18 +15,18 @@ const Landing = () => {
   const { token: { colorBgContainer }} = theme.useToken();
   const colRef = collection(dbfire,'application form')
   const {currentUser} = useContext(AuthContext)
-  useEffect(()=>{
-    const display = onSnapshot(colRef,(querySnapshot)=>{
-      const items: any=[] ;
-      querySnapshot.forEach((doc)=>{
-        items.push(doc.data())
-      });
-      setData(items)
-    })
-    return ()=>{
-      display()
-    }
-  },[data])
+  // useEffect(()=>{
+  //   const display = onSnapshot(colRef,(querySnapshot)=>{
+  //     const items: any=[] ;
+  //     querySnapshot.forEach((doc)=>{
+  //       items.push(doc.data())
+  //     });
+  //     setData(items)
+  //   })
+  //   return ()=>{
+  //     display()
+  //   }
+  // },[data])
 // getDataForTable() {
 //   const display = onSnapshot(colRef,(querySnapshot)=>{
 //     const items: any=[] ;
