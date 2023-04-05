@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import InputField from '../component/inputField';
 import Button from '../component/button';
 import styled from '@emotion/styled';
@@ -8,8 +8,9 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { app, database, dbfire } from '../config/firebase';
 import { ref, set, get } from 'firebase/database';
 import { useForm } from 'react-hook-form';
-import { doc, setDoc} from 'firebase/firestore';
+import { collection, doc, query, setDoc, where} from 'firebase/firestore';
 import { message } from 'antd';
+import { AuthContext } from '../config/AuthContex';
 
 const Container = styled.div({
 });
@@ -55,6 +56,7 @@ function LoginFormComponent() {
     loader: false,
     message: '',
   });
+  const userId = useContext(AuthContext)
   const navigate = useNavigate();
   const {
     register, handleSubmit, formState: { errors },
@@ -67,32 +69,37 @@ function LoginFormComponent() {
         mobile: values.mobileNumber,
         address: values.address,
       };
-      const user = await createUserWithEmailAndPassword(
-        app,
-        values.email,
-        values.password
-      );
       /***************realtime database */
-      const key = user.user.uid
+      const keys = userId.currentUser?.uid
+      const colRef = collection(dbfire,'users')
+      const q = query(colRef,where('email','==',values.email))
+      // const key = q;
+      // const starCountRef = ref(database, `users/${key}`);
+      // const value = (await get(starCountRef)).val()
+      const key = userId.currentUser?.uid
       const starCountRef = ref(database, `users/${key}`);
       const value = (await get(starCountRef)).val();
-      
-      if (value == values.email) {
-        setBtnDetails({
-          loader: false,
-          message: 'Account details present',
-        });
-        setTimeout(() => {
+        if (value == values.email) {
+          message.error('Account details present')
           setBtnDetails({
             loader: false,
-            message: ''
+            message: 'Account details present',
           });
-        }, 2000);
-        return;
-      }else{
-
-        await set(ref(database, `users/${user.user.uid}`), userDetails);
-        await setDoc(doc(dbfire,'users',key),userDetails);
+          setTimeout(() => {
+            setBtnDetails({
+              loader: false,
+              message: ''
+            });
+          }, 2000);
+        }
+    
+    const user = await createUserWithEmailAndPassword(
+            app,
+            values.email,
+            values.password
+          );
+    await set(ref(database, `users/${keys}`), userDetails);
+    await setDoc(doc(dbfire,'users',user.user.uid),userDetails);
 
         setBtnDetails({
           loader: false,
@@ -101,7 +108,7 @@ function LoginFormComponent() {
         setTimeout(() => {
           navigate(routeName.LOGIN);
         }, 2000);
-      }
+        
     } catch (e: any) {
       setBtnDetails((pre) => ({
         ...pre,
@@ -110,7 +117,6 @@ function LoginFormComponent() {
       const { code, message } = e;
       console.log('Error', code, message);
     }
-    message.error('Account details present')
   };
 
   const onSubmit = (values: any) => {

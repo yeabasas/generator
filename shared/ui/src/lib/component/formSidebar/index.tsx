@@ -110,23 +110,23 @@ const FormSidebar: React.FC = () => {
           Forms
         </h1>
         {formApp.map((i: any, index) => (
+          <Menu.Item key={index}>
           <Link
             to={`/application/${currentUser?.uid}/forms/${i.appId}/attribute/${i.id}`}
           >
-            <Menu.Item key={index}>
               <span>{i.formName}</span>
-            </Menu.Item>
           </Link>
+            </Menu.Item>
         ))}
       </Menu>
-      <Menu>
+      <Menu theme='dark'>
         {/* <Menu.Item key="3" onClick={SignOut}>
           <LogoutOutlined />
           <span>Sign Out</span>
         </Menu.Item> */}
         <Link to={'/landing'}>
           <Menu.Item key="3">
-            <span>home</span>
+            <span className='font-bold'>Back to home</span>
           </Menu.Item>
         </Link>
       </Menu>

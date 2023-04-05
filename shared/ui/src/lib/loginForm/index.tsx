@@ -73,12 +73,7 @@ const LoginFormComponent = () => {
             navigate(routeName.LANDING);
           }, 1000);
         }
-      }).catch((e)=>{
-        console.log(e)
       })
-
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       setBtnDetails({
         loader: false,
