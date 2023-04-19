@@ -92,7 +92,6 @@ const userId = currentUser?.uid;
     const { name, value } = {name:"inputType",value:selected};
     const lists = [...attributeList];
     lists[index][name] = value;
-    console.log(lists);
     setAttributeList(lists);
   };
 

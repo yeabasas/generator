@@ -44,7 +44,7 @@ const CreateComponents = () => {
   };
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const handleSubmit = async () => {
+  const handleSubmit = async (e:any) => {
     try {
       await setDoc(doc(attColRef), {
         ...appDetails,
@@ -52,8 +52,9 @@ const CreateComponents = () => {
         formId: formId,
         userId: userId,
       })
-        .then(() => setOpen(false))
-        .then(() => message.success('submit successfully'));
+      .then(() => setOpen(false))
+      .then(() => message.success('submit successfully'))
+      .then(e.target.reset())
     } catch (error) {
       console.log(error);
     }
@@ -91,7 +92,7 @@ const CreateComponents = () => {
                 <Modal
                   title="Custom Data"
                   open={open}
-                  onOk={handleSubmit}
+                  onOk={(e)=>handleSubmit(e)}
                   confirmLoading={confirmLoading}
                   onCancel={handleCancel}
                   okButtonProps={{ type: 'default' }}

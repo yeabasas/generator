@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { createElement, useContext, useEffect, useState } from 'react';
 import {
   AppstoreOutlined,
   DashboardOutlined,
@@ -20,7 +20,7 @@ import {
   getFirestore,
 } from 'firebase/firestore';
 import { dbfire } from '../../config/firebase';
-
+import { getDownloadURL, getStorage, ref } from "firebase/storage";
 const FormSidebar: React.FC = () => {
   const navigate = useNavigate();
   const auth = getAuth();
@@ -30,6 +30,11 @@ const FormSidebar: React.FC = () => {
   const colRef = collection(dbfire, 'form');
   const { currentUser } = useContext(AuthContext);
   const q = query(colRef, where('appId', '==', appId));
+
+  const [imgUrl, setImgUrl] = useState('');
+  const storage = getStorage();
+getDownloadURL(ref(storage,`images/${currentUser?.uid}/${appId}/logo`))
+.then((url)=>setImgUrl(url))
 
   useEffect(() => {
     const display = onSnapshot(q, (querySnapshot) => {
@@ -106,9 +111,11 @@ const FormSidebar: React.FC = () => {
       onCollapse={toggleCollapsed}
     >
       <Menu mode="inline" theme="dark" inlineCollapsed={collapsed}>
-        <h1 className="text-xl flex justify-center text-white mb-2 pb-2 mx-4 border-2 border-white border-b-white-500 border-t-0 border-l-0 border-r-0">
-          Forms
+        <img className='h-8 w-full' src={imgUrl}></img>
+        <h1 className="text-xl flex justify-left text-gray mb-2 pb-2 mx-4 border border-blue-700 border-b-blue-900 border-t-0 border-l-0 border-r-0">
+        Forms
         </h1>
+        
         {formApp.map((i: any, index) => (
           <Menu.Item key={index}>
           <Link
@@ -124,9 +131,9 @@ const FormSidebar: React.FC = () => {
           <LogoutOutlined />
           <span>Sign Out</span>
         </Menu.Item> */}
-        <Link to={'/landing'}>
+        <Link className=' fixed bottom-0' to={'/landing'}>
           <Menu.Item key="3">
-            <span className='font-bold'>Back to home</span>
+            <span className='font-bold '>Back to home</span>
           </Menu.Item>
         </Link>
       </Menu>

@@ -1,13 +1,13 @@
 import { Layout, theme, Input, Button, Form, Card, Modal, Space, Alert, message } from 'antd';
 import { dbfire } from '../../config/firebase';
 import Sidebar from '../../component/sidebar';
-import { collection, doc, setDoc } from 'firebase/firestore';
-import { useContext, useState } from 'react';
+import { collection, doc, onSnapshot, query, setDoc, where } from 'firebase/firestore';
+import { useContext, useEffect, useState } from 'react';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { v4 } from 'uuid';
 import { storage } from '../../config/firebase';
 import Footer from '../../component/footer';
-import Table from '../../component/table/appTable';
+import Tables from '../../component/table/appTable';
 import { AuthContext } from '../../config/AuthContex';
 
 const Application = () => {
@@ -30,27 +30,40 @@ const Application = () => {
     formLayout === 'horizontal'
       ? { labelCol: { span: 8 }, wrapperCol: { span: 12 } }
       : null;
+      const [posts, setPosts] = useState<[]>([]);
 
 
   const { Content } = Layout;
   const appDetails = { name: appName, description: description, userId: key };
   const colRef = collection(dbfire, 'application');
-  // let q = query(colRef,where('user','==',key))
+  const q = query(colRef, where('userId', '==', key));
+const id= doc(colRef).id
+  useEffect(() => {
+    const display = onSnapshot(q, (querySnapshot) => {
+      const items: any = [];
+      querySnapshot.forEach((doc) => {
+        items.push({ ...doc.data(), appId: doc.id, key: doc.id });
+      });
+      setPosts(items);
+    });
+    return () => {
+      display();
+    };
+  }, []);
   const createApp = async () => {
     try {
-      await setDoc(doc(colRef), { ...appDetails, id: doc(colRef).id })
+      await setDoc(doc(colRef), { ...appDetails, id:id })
       .then(message.success('Successfully Created!'))
       .then(()=>setOpen(false))
       if (imageUpload == null) return;
       const imageRef = ref(
         storage,
-        `images/${currentUser?.uid}/${imageUpload.name + v4()}`
+        `images/${currentUser?.uid}/${id}/logo`
       );
       uploadBytes(imageRef, imageUpload).then((snapshot) => {
         getDownloadURL(snapshot.ref).then((url) => {
           setImageUrls((prev) => [...prev, url]);
         });
-        console.log('uploaded');
       });
     } catch (error) {
       console.log(error);
@@ -136,7 +149,7 @@ const Application = () => {
                     </Card>
                   </Modal>
                 </Space>
-                <Table />
+                <Tables />
               </Card>
             </div>
           </Content>

@@ -29,19 +29,19 @@ const AttributeTable = () => {
   const toApi = query(colRef, where('id', '==', formId));
   const tooApi = query(attColRef, where('formId', '==', formId));
   useEffect(() => {
-    const customData1: any=[];
+    const items: any=[];
     const display = onSnapshot(toApi, (querySnapshot) => {
       querySnapshot.forEach((single) => {
-        customData1.push(single.data()['attribute']);
+        items.push(single.data()['attribute']);
       });
-      const columns = customData1[0].map((i: any) => {
+      const columns = items[0].map((i: any) => {
           return {
               title: `${i['inputLabel']}`,
               dataIndex: `${i['inputKey']}`,
               key: `${i['inputKey']}`,
             };
         });
-        setCustomData(...customData1);
+        setCustomData(...items);
         setColumn(columns)
         setRender(true);
     });
@@ -49,6 +49,7 @@ const AttributeTable = () => {
       display();
     };
   }, [formId]);
+
   useEffect(() => {
       const display = onSnapshot(tooApi, (querySnapshot) => {
       const items: any = [];
@@ -64,27 +65,16 @@ const AttributeTable = () => {
     };
 }, [formId]);
 
-const dataSources = ()=>{
-    let returnd
-    attCustomData.map((i:any)=>(
-        <>
-        {customData.map((k:any)=>{
-            returnd= i[k['inputKey']];
-        })}
-        </>
-    ))
-    return returnd;
-}
-  async function deleteApp(app: any) {
-    try {
-      await deleteDoc(doc(attColRef, app)).then(() =>
-        message.success('deleted')
-      );
-    } catch (error) {
-      console.error(error);
-    }
+/**************  editable ********************/
+async function deleteApp(app: any) {
+  try {
+    await deleteDoc(doc(attColRef, app)).then(() =>
+      message.success('deleted')
+    );
+  } catch (error) {
+    console.error(error);
   }
-  /**************  editable ********************/
+}
 
   const [editPostId, setEditPostId] = useState(null);
   const [editFormData, setEditFormData] = useState({});
